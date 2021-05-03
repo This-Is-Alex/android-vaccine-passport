@@ -1,3 +1,19 @@
 <resources>
-    <string name="app_name">VaccinePassport</string>
+    <string name="app_name">Vaccine Passport</string>
+    <!-- Preference Titles -->
+    <string name="security_header">Security</string>
+    <string name="modes_header">Modes</string>
+
+    <!-- Modes headings -->
+    <string name="pref_border_mode_title">Border mode</string>
+    <string name="pref_border_mode_desc">Makes UI for scanning vaccine passports more streamlined</string>
+    <string name="pref_logging_title">Scan logging</string>
+    <string name="pref_logging_desc">Save scanned vaccine passports with approved/rejected status</string>
+
+    <!-- Security headings -->
+    <string name="pref_pin_set_title">Set app PIN</string>
+    <string name="pref_pin_use_title">Require PIN to open app</string>
+    <string name="pref_fingerprint_title">Allow unlocking with fingerprint</string>
+    <string name="pref_fingerprint_desc">For devices with a fingerprint sensor</string>
+
 </resources>
