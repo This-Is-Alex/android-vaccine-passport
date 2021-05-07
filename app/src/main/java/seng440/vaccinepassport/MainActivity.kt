@@ -6,7 +6,11 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import seng440.vaccinepassport.ui.main.MainFragment
+import seng440.vaccinepassport.ui.main.MainViewModel
+import seng440.vaccinepassport.ui.main.ScannerFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,6 +23,15 @@ class MainActivity : AppCompatActivity() {
                     .commitNow()
             //TODO show PIN/fingerprint unlock when set
         }
+        val model: MainViewModel by viewModels()
+        model.getActionBarTitle().observe(this, Observer<String>{ title ->
+            supportActionBar?.title = title
+        })
+        model.getActionBarSubtitle().observe(this, Observer<String>{ subtitle ->
+            supportActionBar?.subtitle = subtitle
+        })
+
+        model.getActionBarTitle().value = getString(R.string.app_name)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -33,7 +46,19 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "You did it!", Toast.LENGTH_SHORT).show()
                 true
             }
+            R.id.menu_scan_temp -> {
+                showScannerPage()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun showScannerPage() {
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, ScannerFragment.newInstance())
+            .addToBackStack("scanner")
+            .commit()
     }
 }
