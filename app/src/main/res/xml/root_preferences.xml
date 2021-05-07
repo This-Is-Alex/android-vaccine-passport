@@ -4,17 +4,20 @@
     <PreferenceCategory app:title="@string/security_header">
         <Preference
             android:key="set_pin"
-            android:title="@string/pref_pin_set_title" />
+            android:title="@string/pref_pin_set_title"
+            app:icon="@drawable/icon_pin" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="use_pin"
-            android:title="@string/pref_pin_use_title" />
+            android:title="@string/pref_pin_use_title"
+            app:icon="@drawable/icon_pin_security" />
         <SwitchPreference
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:defaultValue="false"
             android:key="use_fingerprint"
             android:title="@string/pref_fingerprint_title"
+            app:icon="@drawable/icon_fingerprint"
             app:summary="@string/pref_fingerprint_desc" />
     </PreferenceCategory>
 
@@ -23,14 +26,16 @@
             android:defaultValue="false"
             android:key="border_mode"
             android:summary="@string/pref_border_mode_desc"
-            android:title="@string/pref_border_mode_title" />
+            android:title="@string/pref_border_mode_title"
+            app:icon="@drawable/icon_border_sec" />
         <SwitchPreference
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:defaultValue="false"
             android:key="logging_mode"
             android:summary="@string/pref_logging_desc"
-            android:title="@string/pref_logging_title" />
+            android:title="@string/pref_logging_title"
+            app:icon="@drawable/icon_logging" />
     </PreferenceCategory>
 
 </PreferenceScreen>
