@@ -25,8 +25,8 @@ class ScannerFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        model.getActionBarTitle().value = "Scanning"
-        model.getActionBarSubtitle().value = "Looking for passport"
+        model.getActionBarTitle().value = getString(R.string.scanner_actionbar_title)
+        model.getActionBarSubtitle().value = getString(R.string.scanner_actionbar_subtitle)
     }
 
 

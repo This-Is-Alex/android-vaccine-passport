@@ -17,6 +17,7 @@
     <string name="pref_fingerprint_desc">For devices with a fingerprint sensor</string>
 
     <string name="menu_settings">Settings</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="scanner_actionbar_title">Scanning</string>
+    <string name="scanner_actionbar_subtitle">Looking for a barcode</string>
 </resources>
