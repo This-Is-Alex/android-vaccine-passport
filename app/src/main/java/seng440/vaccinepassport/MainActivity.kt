@@ -5,12 +5,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import seng440.vaccinepassport.ui.main.MainFragment
 import seng440.vaccinepassport.ui.main.MainViewModel
 import seng440.vaccinepassport.ui.main.ScannerFragment
+import seng440.vaccinepassport.ui.main.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,22 +43,22 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_settings -> {
-                Toast.makeText(this, "You did it!", Toast.LENGTH_SHORT).show()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container,
+                        SettingsFragment()
+                    )
+                    .addToBackStack("scanner")
+                    .commit()
                 true
             }
             R.id.menu_scan_temp -> {
-                showScannerPage()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, ScannerFragment.newInstance())
+                    .addToBackStack("scanner")
+                    .commit()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun showScannerPage() {
-
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, ScannerFragment.newInstance())
-            .addToBackStack("scanner")
-            .commit()
     }
 }
