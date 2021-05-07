@@ -20,4 +20,9 @@
 
     <string name="scanner_actionbar_title">Scanning</string>
     <string name="scanner_actionbar_subtitle">Looking for a barcode</string>
+
+    <string name="why_camera_permission">This app needs access to your camera in order to scan and recognise barcodes.
+        Barcodes are used for exchanging vaccine passports so this app cannot work without the camera.
+        You will be prompted to accept camera permissions in order to use the scan feature.</string>
+    <string name="why_camera_permission_acknowledge">Ok</string>
 </resources>

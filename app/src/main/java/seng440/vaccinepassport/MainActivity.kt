@@ -1,11 +1,13 @@
 package seng440.vaccinepassport
 
+import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import seng440.vaccinepassport.ui.main.MainFragment
 import seng440.vaccinepassport.ui.main.MainViewModel
@@ -37,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.main_menu, menu)
+
         return true
     }
 
@@ -47,6 +50,7 @@ class MainActivity : AppCompatActivity() {
                     .replace(R.id.container,
                         SettingsFragment()
                     )
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .addToBackStack("scanner")
                     .commit()
                 true
