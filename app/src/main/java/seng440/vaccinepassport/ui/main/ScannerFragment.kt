@@ -5,12 +5,17 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -19,6 +24,7 @@ import seng440.vaccinepassport.R
 
 
 class ScannerFragment : Fragment() {
+
     companion object {
         fun newInstance() = ScannerFragment()
     }
@@ -76,7 +82,25 @@ class ScannerFragment : Fragment() {
     }
 
     private fun initCamera() {
-        Toast.makeText(context, "Initializing camera", Toast.LENGTH_SHORT).show()
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+        cameraProviderFuture.addListener(Runnable {
+            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+            val preview = Preview.Builder().build().also {
+                it.setSurfaceProvider(
+                    requireView().findViewById<PreviewView>(R.id.viewFinder).createSurfaceProvider()
+                )
+            }
+
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            try {
+                cameraProvider.unbindAll()
+
+                // Stops using the camera when the fragment stops, don't have to worry about resource usage
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview)
+            } catch (e: Exception) {
+                Log.e("ScannerFragment", "Camera binding failed", e)
+            }
+        }, ContextCompat.getMainExecutor(requireContext()))
     }
 
 }
