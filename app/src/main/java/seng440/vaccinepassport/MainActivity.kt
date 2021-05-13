@@ -1,20 +1,25 @@
 package seng440.vaccinepassport
 
-import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
+import seng440.vaccinepassport.listeners.BarcodeScannedListener
+import seng440.vaccinepassport.room.VPassData
 import seng440.vaccinepassport.ui.main.MainFragment
 import seng440.vaccinepassport.ui.main.MainViewModel
 import seng440.vaccinepassport.ui.main.ScannerFragment
 import seng440.vaccinepassport.ui.main.SettingsFragment
+import java.io.ByteArrayInputStream
+import java.io.DataInputStream
+import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), BarcodeScannedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,5 +69,56 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onScanned(rawData: ByteArray) {
+        val inputStream: DataInputStream = DataInputStream(ByteArrayInputStream(rawData))
+
+        val dateAdministered = inputStream.readInt()
+        val vaccineType = VaccineType.fromId(inputStream.readByte())
+        val dosageNumber = inputStream.readByte().toInt()
+
+        val passportNumberRaw = ByteArray(9)
+        inputStream.read(passportNumberRaw, 0, 9)
+
+        val passportNumber = String(passportNumberRaw)
+            .trimEnd(Integer.valueOf(0).toChar()) //trim 0s off the end
+        val passportExpiry = inputStream.readInt()
+        val dateOfBirth = inputStream.readInt()
+
+        val countryRaw = ByteArray(3)
+        inputStream.read(countryRaw, 0, 3)
+
+        val country = String(countryRaw)
+
+        Log.d("Barcode", "About to read names... $dateAdministered ${vaccineType?.fullName} $dosageNumber $passportNumber")
+
+        val rawName = ByteArray(inputStream.readByte().toInt())
+        inputStream.read(rawName, 0, rawName.size)
+        val rawDoctor = ByteArray(inputStream.readByte().toInt())
+        inputStream.read(rawDoctor, 0, rawDoctor.size)
+
+        val name = String(rawName)
+        val doctorName = String(rawDoctor)
+
+        Log.d("Barcode", "Names are $name, $doctorName")
+
+        if (inputStream.read() != -1) return //there is still more data, must be the wrong format
+        if (vaccineType == null || !isLettersOrDigits(passportNumber) || !isLettersOrDigits(country)) return
+
+        Log.d("Barcode", "Read successfully")
+    }
+
+    private fun timestampToDate(timestamp: Int): Date {
+        return Date(timestamp.toLong() * 86400L * 1000L)
+    }
+
+    private fun isLettersOrDigits(chars: String): Boolean {
+        for (c in chars) {
+            if (c !in 'A'..'Z' && c !in 'a'..'z' && c !in '0'..'9') {
+                return false
+            }
+        }
+        return true
     }
 }

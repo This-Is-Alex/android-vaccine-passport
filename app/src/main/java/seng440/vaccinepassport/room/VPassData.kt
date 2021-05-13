@@ -12,14 +12,14 @@ import java.util.*
 @Entity(tableName = "vPass")
 class VPassData (
     @PrimaryKey(autoGenerate = true) val id: Long,
-    @ColumnInfo val date: String,
-    @ColumnInfo val vacId: Short,
-    @ColumnInfo val drAdiministered: String,
+    @ColumnInfo val date: Int,
+    @ColumnInfo val vacId: Byte,
+    @ColumnInfo val drAdministered: String,
     @ColumnInfo val dosageNum: Short,
     @ColumnInfo val name: String,
     @ColumnInfo val passportNum: String,
     @ColumnInfo val passportExpDate: String,
-    @ColumnInfo val doB: String,
+    @ColumnInfo val dob: Int,
     @ColumnInfo val country: String) {
 
     override fun toString() = "Vaccine: $vacId | $date, $name"

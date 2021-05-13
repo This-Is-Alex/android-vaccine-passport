@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.util.Size
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -20,7 +23,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import com.google.mlkit.vision.barcode.Barcode
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions
+import seng440.vaccinepassport.BarcodeImageAnalyser
 import seng440.vaccinepassport.R
+import seng440.vaccinepassport.listeners.BarcodeScannedListener
+import java.util.concurrent.Executors
 
 
 class ScannerFragment : Fragment() {
@@ -83,6 +91,7 @@ class ScannerFragment : Fragment() {
 
     private fun initCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+        val cameraExecutor = Executors.newSingleThreadExecutor()
         cameraProviderFuture.addListener(Runnable {
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder().build().also {
@@ -95,8 +104,14 @@ class ScannerFragment : Fragment() {
             try {
                 cameraProvider.unbindAll()
 
-                // Stops using the camera when the fragment stops, don't have to worry about resource usage
-                cameraProvider.bindToLifecycle(this, cameraSelector, preview)
+                val analyser = BarcodeImageAnalyser(requireActivity() as BarcodeScannedListener)
+                val imageAnalysis = ImageAnalysis.Builder()
+                    .build()
+                    .also {
+                        it.setAnalyzer(cameraExecutor, analyser)
+                    }
+                 // Stops using the camera when the fragment stops, don't have to worry about resource usage
+                 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis)
             } catch (e: Exception) {
                 Log.e("ScannerFragment", "Camera binding failed", e)
             }
