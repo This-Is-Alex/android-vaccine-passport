@@ -17,6 +17,7 @@ class BarcodeImageAnalyser(private val listener: BarcodeScannedListener) : Image
                     Barcode.FORMAT_AZTEC)
             .build()
     private val scanner = BarcodeScanning.getClient(barcodeOptions)
+    private var foundBarcode = false
 
     @SuppressLint("UnsafeExperimentalUsageError")
     override fun analyze(imageProxy: ImageProxy) {
@@ -33,6 +34,7 @@ class BarcodeImageAnalyser(private val listener: BarcodeScannedListener) : Image
                                 val doctorLength = rawValue[27 + nameLength].toInt();
                                 Log.d("Barcode", "Got ${rawValue.size}, name is $nameLength and doctor is $doctorLength")
                                 if (rawValue.size == nameLength + doctorLength + 28) {
+                                    foundBarcode = true
                                     listener.onScanned(rawValue)
                                 }
                             }
@@ -43,7 +45,9 @@ class BarcodeImageAnalyser(private val listener: BarcodeScannedListener) : Image
                     it.printStackTrace()
                 }
                 .addOnCompleteListener{
-                    imageProxy.close()
+                    if (!foundBarcode) {
+                        imageProxy.close()
+                    }
                 }
         }
     }

@@ -18,7 +18,7 @@ class VPassData (
     @ColumnInfo val dosageNum: Short,
     @ColumnInfo val name: String,
     @ColumnInfo val passportNum: String,
-    @ColumnInfo val passportExpDate: String,
+    @ColumnInfo val passportExpDate: Int,
     @ColumnInfo val dob: Int,
     @ColumnInfo val country: String) {
 
