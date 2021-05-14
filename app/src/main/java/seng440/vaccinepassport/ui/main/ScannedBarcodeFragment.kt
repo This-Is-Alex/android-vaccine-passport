@@ -51,6 +51,7 @@ class ScannedBarcodeFragment : Fragment() {
         view.findViewById<TextView>(R.id.vpass_vaccine_date).text = dateFormatter.format(date)
         view.findViewById<TextView>(R.id.vpass_vaccine_type).text = VaccineType.fromId(passport.vacId)?.fullName
         view.findViewById<TextView>(R.id.vpass_vaccine_giver).text = passport.drAdministered
+        view.findViewById<TextView>(R.id.vpass_vaccine_country).text = passport.country
         view.findViewById<TextView>(R.id.vpass_vaccine_dose).text = passport.dosageNum.toString()
 
         view.findViewById<TextView>(R.id.vpass_passport_passportno).text = passport.passportNum
