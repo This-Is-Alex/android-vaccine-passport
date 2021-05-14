@@ -2,24 +2,16 @@ package seng440.vaccinepassport
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
-import seng440.vaccinepassport.listeners.BarcodeScannedListener
-import seng440.vaccinepassport.room.VPassData
-import seng440.vaccinepassport.room.VPassLiveRoomApplication
-import seng440.vaccinepassport.room.VPassViewModel
-import seng440.vaccinepassport.room.VPassViewModelFactory
 import seng440.vaccinepassport.ui.main.MainFragment
 import seng440.vaccinepassport.ui.main.MainViewModel
 import seng440.vaccinepassport.ui.main.ScannerFragment
 import seng440.vaccinepassport.ui.main.SettingsFragment
-import java.io.ByteArrayInputStream
-import java.io.DataInputStream
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -71,6 +63,12 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    companion object {
+        fun timestampToDate(timestamp: Int): Date {
+            return Date(timestamp.toLong() * 86400L * 1000L)
         }
     }
 }

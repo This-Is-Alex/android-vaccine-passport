@@ -27,4 +27,18 @@
     <string name="why_camera_permission_acknowledge">Ok</string>
 
     <string name="scan">Scan</string>
+    <string name="showing_scan_result_title">Viewing VaccPass Info</string>
+
+    <string name="vpass_vaccine_info">Vaccine Info</string>
+    <string name="vpass_passport_info">Passport Info</string>
+    <string name="vpass_person_info">Personal Details</string>
+    <string name="vpass_vaccine_type">Vaccine type</string>
+    <string name="vpass_vaccine_date">Vaccination date</string>
+    <string name="vpass_vaccine_dose">Dosage number</string>
+    <string name="vpass_vaccine_giver">Administered by</string>
+    <string name="vpass_vaccine_country">Administered in</string>
+    <string name="vpass_passport_passportno">Passport number</string>
+    <string name="vpass_passport_passportexpiry">Passport expiry date</string>
+    <string name="vpass_person_name">Full name</string>
+    <string name="vpass_person_dob">Date of birth</string>
 </resources>

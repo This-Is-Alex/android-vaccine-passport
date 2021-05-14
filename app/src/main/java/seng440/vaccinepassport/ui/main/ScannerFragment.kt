@@ -19,9 +19,11 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import seng440.vaccinepassport.BarcodeImageAnalyser
 import seng440.vaccinepassport.R
+import seng440.vaccinepassport.SerializableVPass
 import seng440.vaccinepassport.VaccineType
 import seng440.vaccinepassport.listeners.BarcodeScannedListener
 import seng440.vaccinepassport.room.VPassData
@@ -42,6 +44,8 @@ class ScannerFragment : Fragment(), BarcodeScannedListener {
     }
 
     private var cameraExecutor: ExecutorService? = null
+    private var cameraState: Boolean = false
+    private var hasPermission: Boolean = false
 
     companion object {
         fun newInstance() = ScannerFragment()
@@ -53,7 +57,7 @@ class ScannerFragment : Fragment(), BarcodeScannedListener {
         val permission = ContextCompat.checkSelfPermission(
             requireActivity(), Manifest.permission.CAMERA)
         if (permission == PackageManager.PERMISSION_GRANTED) {
-            initCamera()
+            hasPermission = true
         } else if (permission == PackageManager.PERMISSION_DENIED){
             if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA)) {
                 val builder = AlertDialog.Builder(context)
@@ -80,10 +84,16 @@ class ScannerFragment : Fragment(), BarcodeScannedListener {
         super.onStart()
         model.getActionBarTitle().value = getString(R.string.scanner_actionbar_title)
         model.getActionBarSubtitle().value = getString(R.string.scanner_actionbar_subtitle)
+
+        if (!cameraState && hasPermission) {
+            cameraState = true
+            initCamera()
+        }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onStop() {
+        super.onStop()
+        cameraState = false
         cameraExecutor?.shutdown()
     }
 
@@ -93,6 +103,7 @@ class ScannerFragment : Fragment(), BarcodeScannedListener {
                 ActivityResultContracts.RequestPermission()
             ) { isGranted: Boolean ->
                 if (isGranted) {
+                    hasPermission = true
                     initCamera()
                 } else {
                     // Permission was denied
@@ -182,12 +193,22 @@ class ScannerFragment : Fragment(), BarcodeScannedListener {
         if (vaccineType == null || !isLettersOrDigits(passportNumber) || !isLettersOrDigits(country)) return
 
         Log.d("Barcode", "Read successfully")
-        val dataObject = VPassData(dateAdministered, vaccineType.id, doctorName, dosageNumber.toShort(), name, passportNumber, passportExpiry, dateOfBirth, country)
+        /*val dataObject = VPassData(dateAdministered, vaccineType.id, doctorName, dosageNumber.toShort(), name, passportNumber, passportExpiry, dateOfBirth, country)
 
         viewModel.deleteVPass(dataObject)
         viewModel.addVPass(dataObject)
 
-        Log.d("Database", "Barcode saved successfully")
+        Log.d("Database", "Barcode saved successfully")*/
+        val dataObject = SerializableVPass(dateAdministered, vaccineType.id, doctorName, dosageNumber.toShort(), name, passportNumber, passportExpiry, dateOfBirth, country)
+        requireActivity().intent.putExtra("just_scanned", dataObject)
+
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.container,
+                ScannedBarcodeFragment()
+            )
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .addToBackStack("show_scan_result")
+            .commit()
     }
 
 }
