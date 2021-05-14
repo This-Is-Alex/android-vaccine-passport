@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
@@ -21,12 +22,24 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import seng440.vaccinepassport.BarcodeImageAnalyser
 import seng440.vaccinepassport.R
+import seng440.vaccinepassport.VaccineType
 import seng440.vaccinepassport.listeners.BarcodeScannedListener
+import seng440.vaccinepassport.room.VPassData
+import seng440.vaccinepassport.room.VPassLiveRoomApplication
+import seng440.vaccinepassport.room.VPassViewModel
+import seng440.vaccinepassport.room.VPassViewModelFactory
+import java.io.ByteArrayInputStream
+import java.io.DataInputStream
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-class ScannerFragment : Fragment() {
+class ScannerFragment : Fragment(), BarcodeScannedListener {
+
+    private val viewModel: VPassViewModel by activityViewModels() {
+        VPassViewModelFactory((activity?.application as VPassLiveRoomApplication).repository)
+    }
 
     private var cameraExecutor: ExecutorService? = null
 
@@ -106,7 +119,7 @@ class ScannerFragment : Fragment() {
             try {
                 cameraProvider.unbindAll()
 
-                val analyser = BarcodeImageAnalyser(requireActivity() as BarcodeScannedListener)
+                val analyser = BarcodeImageAnalyser(this as BarcodeScannedListener)
                 val imageAnalysis = ImageAnalysis.Builder()
                     .build()
                     .also {
@@ -118,6 +131,61 @@ class ScannerFragment : Fragment() {
                 Log.e("ScannerFragment", "Camera binding failed", e)
             }
         }, ContextCompat.getMainExecutor(requireContext()))
+    }
+
+    private fun timestampToDate(timestamp: Int): Date {
+        return Date(timestamp.toLong() * 86400L * 1000L)
+    }
+
+    private fun isLettersOrDigits(chars: String): Boolean {
+        for (c in chars) {
+            if (c !in 'A'..'Z' && c !in 'a'..'z' && c !in '0'..'9') {
+                return false
+            }
+        }
+        return true
+    }
+
+    override fun onScanned(rawData: ByteArray) {
+        val inputStream: DataInputStream = DataInputStream(ByteArrayInputStream(rawData))
+
+        val dateAdministered = inputStream.readInt()
+        val vaccineType = VaccineType.fromId(inputStream.readByte())
+        val dosageNumber = inputStream.readByte().toInt()
+
+        val passportNumberRaw = ByteArray(9)
+        inputStream.read(passportNumberRaw, 0, 9)
+
+        val passportNumber = String(passportNumberRaw)
+                .trimEnd(Integer.valueOf(0).toChar()) //trim 0s off the end
+        val passportExpiry = inputStream.readInt()
+        val dateOfBirth = inputStream.readInt()
+
+        val countryRaw = ByteArray(3)
+        inputStream.read(countryRaw, 0, 3)
+
+        val country = String(countryRaw)
+
+        Log.d("Barcode", "About to read names... $dateAdministered ${vaccineType?.fullName} $dosageNumber $passportNumber")
+
+        val rawName = ByteArray(inputStream.readByte().toInt())
+        inputStream.read(rawName, 0, rawName.size)
+        val rawDoctor = ByteArray(inputStream.readByte().toInt())
+        inputStream.read(rawDoctor, 0, rawDoctor.size)
+
+        val name = String(rawName)
+        val doctorName = String(rawDoctor)
+
+        Log.d("Barcode", "Names are $name, $doctorName")
+
+        if (inputStream.read() != -1) return //there is still more data, must be the wrong format
+        if (vaccineType == null || !isLettersOrDigits(passportNumber) || !isLettersOrDigits(country)) return
+
+        Log.d("Barcode", "Read successfully")
+        val dataObject = VPassData(dateAdministered, vaccineType.id, doctorName, dosageNumber.toShort(), name, passportNumber, passportExpiry, dateOfBirth, country)
+
+        viewModel.deleteVPass(dataObject)
+        viewModel.addVPass(dataObject)
     }
 
 }
