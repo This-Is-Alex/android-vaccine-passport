@@ -29,6 +29,7 @@ import java.util.concurrent.Executors
 class ScannerFragment : Fragment() {
 
     private var cameraExecutor: ExecutorService? = null
+    private var cameraState: Boolean = false
 
     companion object {
         fun newInstance() = ScannerFragment()
@@ -37,6 +38,7 @@ class ScannerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        cameraState = true
         val permission = ContextCompat.checkSelfPermission(
             requireActivity(), Manifest.permission.CAMERA)
         if (permission == PackageManager.PERMISSION_GRANTED) {
@@ -67,10 +69,16 @@ class ScannerFragment : Fragment() {
         super.onStart()
         model.getActionBarTitle().value = getString(R.string.scanner_actionbar_title)
         model.getActionBarSubtitle().value = getString(R.string.scanner_actionbar_subtitle)
+
+        if (!cameraState) {
+            cameraState = true
+            initCamera()
+        }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onStop() {
+        super.onStop()
+        cameraState = false
         cameraExecutor?.shutdown()
     }
 
