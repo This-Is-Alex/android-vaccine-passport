@@ -186,6 +186,8 @@ class ScannerFragment : Fragment(), BarcodeScannedListener {
 
         viewModel.deleteVPass(dataObject)
         viewModel.addVPass(dataObject)
+
+        Log.d("Database", "Barcode saved successfully")
     }
 
 }

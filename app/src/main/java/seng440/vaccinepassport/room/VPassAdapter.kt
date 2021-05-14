@@ -11,7 +11,7 @@ import seng440.vaccinepassport.R
 class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassListener: OnVPassListener)
     : RecyclerView.Adapter<VPassAdapter.VPassViewHolder>() {
 
-    class VPassViewHolder(itemView: View, val onVPassListener: OnVPassListener)
+    class VPassViewHolder(itemView: View/*, val onVPassListener: OnVPassListener*/)
         : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         val vaccIdDisplay: TextView
@@ -34,14 +34,14 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
         }
 
         override fun onClick(view: View?) {
-            OnVPassListener.onVPassClick(adapterPosition)
+            //OnVPassListener.onVPassClick(adapterPosition)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VPassViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.vaccine_list_item, parent, false)
-        return VPassViewHolder(view, OnVPassListener)
+        return VPassViewHolder(view/*, OnVPassListener*/)
     }
 
     override fun onBindViewHolder(viewHolder: VPassViewHolder, position: Int) {
