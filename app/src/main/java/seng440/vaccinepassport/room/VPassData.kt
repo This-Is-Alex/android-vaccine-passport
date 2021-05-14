@@ -22,6 +22,9 @@ class VPassData (
     @ColumnInfo val dob: Int,
     @ColumnInfo val country: String) {
 
+    constructor(date: Int, vacId: Byte, dr: String, dosageNum: Short, name: String, passportNum: String, passportExp: Int, dob: Int, country: String )
+            : this(0, date, vacId, dr, dosageNum, name, passportNum, passportExp, dob, country)
+
     override fun toString() = "Vaccine: $vacId | $date, $name"
 }
 

@@ -21,6 +21,10 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), BarcodeScannedListener {
 
+g    private val viewModel: MapsViewModel by activityViewModels() {
+        MapsViewModelFactory((activty?.application as BSFavouratesLiveRoomApplication).repository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_fragment)
@@ -107,6 +111,8 @@ class MainActivity : AppCompatActivity(), BarcodeScannedListener {
         if (vaccineType == null || !isLettersOrDigits(passportNumber) || !isLettersOrDigits(country)) return
 
         Log.d("Barcode", "Read successfully")
+        val dataObject = VPassData(dateAdministered, vaccineType.id, doctorName, dosageNumber.toShort(), name, passportNumber, passportExpiry, dateOfBirth, country)
+
     }
 
     private fun timestampToDate(timestamp: Int): Date {
