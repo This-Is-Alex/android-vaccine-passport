@@ -347,18 +347,11 @@
     </ScrollView>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/barcode_save_options"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_gravity="center"
         android:layout_weight="1"
-        card_view:cardCornerRadius="4dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:elevation="12dp"
-            android:gravity="center|center_horizontal"
-            android:text="ALSO TODO" />
-    </androidx.cardview.widget.CardView>
+        card_view:cardCornerRadius="4dp"/>
 
 </LinearLayout>
