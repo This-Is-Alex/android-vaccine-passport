@@ -33,10 +33,20 @@ class ScannedBarcodeFragment(val passport: VPassData) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val date = MainActivity.timestampToDate(passport.date)
+        val dob = MainActivity.timestampToDate(passport.dob)
+        val passportExpiry = MainActivity.timestampToDate(passport.passportExpDate)
+
+
+        view.findViewById<TextView>(R.id.vpass_vaccine_date).text = dateFormatter.format(date)
         view.findViewById<TextView>(R.id.vpass_vaccine_type).text = VaccineType.fromId(passport.vacId)?.fullName
         view.findViewById<TextView>(R.id.vpass_vaccine_giver).text = passport.drAdministered
         view.findViewById<TextView>(R.id.vpass_vaccine_dose).text = passport.dosageNum.toString()
-        val date = MainActivity.timestampToDate(passport.date)
-        view.findViewById<TextView>(R.id.vpass_vaccine_date).text = dateFormatter.format(date)
+
+        view.findViewById<TextView>(R.id.vpass_passport_passportno).text = passport.passportNum
+        view.findViewById<TextView>(R.id.vpass_passport_passportexpiry).text = dateFormatter.format(passportExpiry)
+
+        view.findViewById<TextView>(R.id.vpass_person_name).text = passport.name
+        view.findViewById<TextView>(R.id.vpass_person_dob).text = dateFormatter.format(dob)
     }
 }
