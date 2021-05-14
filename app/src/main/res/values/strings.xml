@@ -27,4 +27,12 @@
     <string name="why_camera_permission_acknowledge">Ok</string>
 
     <string name="scan">Scan</string>
+    <string name="showing_scan_result_title">Viewing Scanned Vaccine Passport Data</string>
+
+    <string name="vpass_vaccine_info">Vaccine Info</string>
+    <string name="vpass_person_info">Personal Details</string>
+    <string name="vpass_vaccine_type">Vaccine Type</string>
+    <string name="vpass_vaccine_date">Vaccination Date</string>
+    <string name="vpass_vaccine_dose">Dosage Number</string>
+    <string name="vpass_vaccine_giver">Administered by</string>
 </resources>

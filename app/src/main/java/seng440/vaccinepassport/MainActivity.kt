@@ -11,10 +11,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import seng440.vaccinepassport.listeners.BarcodeScannedListener
 import seng440.vaccinepassport.room.VPassData
-import seng440.vaccinepassport.ui.main.MainFragment
-import seng440.vaccinepassport.ui.main.MainViewModel
-import seng440.vaccinepassport.ui.main.ScannerFragment
-import seng440.vaccinepassport.ui.main.SettingsFragment
+import seng440.vaccinepassport.ui.main.*
 import java.io.ByteArrayInputStream
 import java.io.DataInputStream
 import java.util.*
@@ -107,10 +104,16 @@ class MainActivity : AppCompatActivity(), BarcodeScannedListener {
         if (vaccineType == null || !isLettersOrDigits(passportNumber) || !isLettersOrDigits(country)) return
 
         Log.d("Barcode", "Read successfully")
-    }
 
-    private fun timestampToDate(timestamp: Int): Date {
-        return Date(timestamp.toLong() * 86400L * 1000L)
+        val dataObject = VPassData(-1, dateAdministered, vaccineType.id, doctorName, dosageNumber.toShort(), name, passportNumber, passportExpiry, dateOfBirth, country)
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container,
+                ScannedBarcodeFragment(dataObject)
+            )
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .addToBackStack("show_scan_result")
+            .commit()
     }
 
     private fun isLettersOrDigits(chars: String): Boolean {
@@ -120,5 +123,11 @@ class MainActivity : AppCompatActivity(), BarcodeScannedListener {
             }
         }
         return true
+    }
+
+    companion object {
+        fun timestampToDate(timestamp: Int): Date {
+            return Date(timestamp.toLong() * 86400L * 1000L)
+        }
     }
 }
