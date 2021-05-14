@@ -15,10 +15,21 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
         : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         val vaccIdDisplay: TextView
+        val drsName: TextView
+        val dosageNum : TextView
+        val vaccineDate : TextView
+        val country : TextView
+        val name : TextView
+        val passportNum : TextView
 
         init {
-            vaccIdDisplay = itemView.findViewById(R.id.vaccIdDisplay)
-
+            vaccIdDisplay = itemView.findViewById(R.id.txt_vaccine_name)
+            drsName = itemView.findViewById(R.id.txt_dr_name)
+            dosageNum = itemView.findViewById(R.id.txt_dose_num)
+            vaccineDate = itemView.findViewById(R.id.txt_vaccine_date)
+            country = itemView.findViewById(R.id.txt_country)
+            name = itemView.findViewById(R.id.txt_person_name)
+            passportNum = itemView.findViewById(R.id.txt_passport_number)
             itemView.setOnClickListener(this)
         }
 
@@ -29,7 +40,7 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VPassViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.vPass_item, parent, false)
+            .inflate(R.layout.vaccine_list_item, parent, false)
         return VPassViewHolder(view, OnVPassListener)
     }
 
