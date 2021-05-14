@@ -9,13 +9,23 @@ import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import seng440.vaccinepassport.MainActivity
 import seng440.vaccinepassport.R
+import seng440.vaccinepassport.SerializableVPass
 import seng440.vaccinepassport.VaccineType
 import seng440.vaccinepassport.room.VPassData
 import java.text.SimpleDateFormat
 
-class ScannedBarcodeFragment(val passport: VPassData) : Fragment() {
+class ScannedBarcodeFragment : Fragment() {
     private val model: MainViewModel by activityViewModels()
     private val dateFormatter = SimpleDateFormat("dd-MMM-yyyy")
+    private lateinit var passport: SerializableVPass
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (requireActivity().intent.hasExtra("just_scanned")) {
+            passport = requireActivity().intent.getSerializableExtra("just_scanned") as SerializableVPass
+        }
+    }
 
     override fun onStart() {
         super.onStart()

@@ -105,11 +105,12 @@ class MainActivity : AppCompatActivity(), BarcodeScannedListener {
 
         Log.d("Barcode", "Read successfully")
 
-        val dataObject = VPassData(-1, dateAdministered, vaccineType.id, doctorName, dosageNumber.toShort(), name, passportNumber, passportExpiry, dateOfBirth, country)
+        val dataObject = SerializableVPass(dateAdministered, vaccineType.id, doctorName, dosageNumber.toShort(), name, passportNumber, passportExpiry, dateOfBirth, country)
+        intent.putExtra("just_scanned", dataObject)
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.container,
-                ScannedBarcodeFragment(dataObject)
+                ScannedBarcodeFragment()
             )
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .addToBackStack("show_scan_result")

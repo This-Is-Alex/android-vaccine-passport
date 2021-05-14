@@ -30,6 +30,7 @@ class ScannerFragment : Fragment() {
 
     private var cameraExecutor: ExecutorService? = null
     private var cameraState: Boolean = false
+    private var hasPermission: Boolean = false
 
     companion object {
         fun newInstance() = ScannerFragment()
@@ -38,11 +39,10 @@ class ScannerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        cameraState = true
         val permission = ContextCompat.checkSelfPermission(
             requireActivity(), Manifest.permission.CAMERA)
         if (permission == PackageManager.PERMISSION_GRANTED) {
-            initCamera()
+            hasPermission = true
         } else if (permission == PackageManager.PERMISSION_DENIED){
             if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.CAMERA)) {
                 val builder = AlertDialog.Builder(context)
@@ -70,7 +70,7 @@ class ScannerFragment : Fragment() {
         model.getActionBarTitle().value = getString(R.string.scanner_actionbar_title)
         model.getActionBarSubtitle().value = getString(R.string.scanner_actionbar_subtitle)
 
-        if (!cameraState) {
+        if (!cameraState && hasPermission) {
             cameraState = true
             initCamera()
         }
@@ -88,6 +88,7 @@ class ScannerFragment : Fragment() {
                 ActivityResultContracts.RequestPermission()
             ) { isGranted: Boolean ->
                 if (isGranted) {
+                    hasPermission = true
                     initCamera()
                 } else {
                     // Permission was denied
