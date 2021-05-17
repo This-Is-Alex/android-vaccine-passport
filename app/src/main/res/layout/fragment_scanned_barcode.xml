@@ -47,7 +47,8 @@
                     android:layout_gravity="bottom"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="16dp"
-                    android:src="@drawable/icon_syringe" />
+                    android:src="@drawable/icon_syringe"
+                    android:tint="@color/amber_500" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -57,6 +58,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/vpass_vaccine_info"
                     android:textAllCaps="true"
+                    android:textColor="@color/amber_500"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -195,7 +197,8 @@
                     android:layout_gravity="bottom"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="16dp"
-                    android:src="@drawable/icon_passport" />
+                    android:src="@drawable/icon_passport"
+                    android:tint="@color/amber_500" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -205,6 +208,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/vpass_passport_info"
                     android:textAllCaps="true"
+                    android:textColor="@color/amber_500"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -275,7 +279,8 @@
                     android:layout_gravity="bottom"
                     android:layout_marginEnd="4dp"
                     android:layout_marginBottom="16dp"
-                    android:src="@drawable/icon_identity" />
+                    android:src="@drawable/icon_identity"
+                    android:tint="@color/amber_500" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -285,6 +290,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/vpass_person_info"
                     android:textAllCaps="true"
+                    android:textColor="@color/amber_500"
                     android:textStyle="bold" />
             </LinearLayout>
 
