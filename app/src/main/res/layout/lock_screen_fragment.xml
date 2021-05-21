@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/pinDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/lockButton1"
+        android:textSize="30sp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/lock_button_1"
+        app:layout_constraintBottom_toTopOf="@+id/lockButton4"
+        app:layout_constraintEnd_toStartOf="@+id/lockButton2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pinDisplay" />
+
+    <Button
+        android:id="@+id/lockButton2"
+        android:textSize="30sp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:text="@string/lock_button_2"
+        app:layout_constraintBottom_toTopOf="@+id/lockButton5"
+        app:layout_constraintEnd_toStartOf="@+id/lockButton3"
+        app:layout_constraintStart_toEndOf="@+id/lockButton1"
+        app:layout_constraintTop_toBottomOf="@+id/pinDisplay" />
+
+    <Button
+        android:id="@+id/lockButton3"
+        android:textSize="30sp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:text="@string/lock_button_3"
+        app:layout_constraintBottom_toTopOf="@+id/lockButton6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.756"
+        app:layout_constraintStart_toEndOf="@+id/lockButton2"
+        app:layout_constraintTop_toBottomOf="@+id/pinDisplay" />
+
+    <Button
+        android:id="@+id/lockButton4"
+        android:textSize="30sp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:text="@string/lock_button_4"
+        app:layout_constraintBottom_toTopOf="@+id/lockButton7"
+        app:layout_constraintEnd_toStartOf="@+id/lockButton5"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lockButton1" />
+
+    <Button
+        android:id="@+id/lockButton5"
+        android:textSize="30sp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:text="@string/lock_button_5"
+        app:layout_constraintBottom_toTopOf="@+id/lockButton8"
+        app:layout_constraintEnd_toStartOf="@+id/lockButton6"
+        app:layout_constraintStart_toEndOf="@+id/lockButton4"
+        app:layout_constraintTop_toBottomOf="@+id/lockButton2" />
+
+    <Button
+        android:id="@+id/lockButton6"
+        android:textSize="30sp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:text="@string/lock_button_6"
+        app:layout_constraintBottom_toTopOf="@+id/lockButton9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/lockButton5"
+        app:layout_constraintTop_toBottomOf="@+id/lockButton3" />
+
+    <Button
+        android:id="@+id/lockButton7"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:text="@string/lock_button_7"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lockButton8"
+        app:layout_constraintEnd_toStartOf="@+id/lockButton8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lockButton4" />
+
+    <Button
+        android:id="@+id/lockButton8"
+        android:textSize="30sp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:text="@string/lock_button_8"
+        app:layout_constraintBottom_toTopOf="@+id/lockButton0"
+        app:layout_constraintEnd_toStartOf="@+id/lockButton9"
+        app:layout_constraintStart_toEndOf="@+id/lockButton7"
+        app:layout_constraintTop_toBottomOf="@+id/lockButton5" />
+
+    <Button
+        android:id="@+id/lockButton9"
+        android:textSize="30sp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        android:text="@string/lock_button_9"
+        app:layout_constraintBottom_toTopOf="@+id/lockButtonDelete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/lockButton8"
+        app:layout_constraintTop_toBottomOf="@+id/lockButton6" />
+
+    <Button
+        android:id="@+id/lockButton0"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:text="@string/lock_button_0"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lockButtonDelete"
+        app:layout_constraintEnd_toStartOf="@+id/lockButton9"
+        app:layout_constraintStart_toEndOf="@+id/lockButton7"
+        app:layout_constraintTop_toBottomOf="@+id/lockButton8" />
+
+    <Button
+        android:id="@+id/lockButtonConfirm"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/lock_button_confirm"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lockButton0" />
+
+    <Button
+        android:id="@+id/lockButtonDelete"
+        android:layout_width="100sp"
+        android:layout_height="80sp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/lock_button_delete"
+        app:layout_constraintBottom_toTopOf="@+id/lockButtonConfirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/lockButton0"
+        app:layout_constraintTop_toBottomOf="@+id/lockButton9" />
+
+    <TextView
+        android:id="@+id/pinErrorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="#FF0000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lockButtonConfirm" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

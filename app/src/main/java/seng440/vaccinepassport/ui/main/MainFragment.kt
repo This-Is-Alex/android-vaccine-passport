@@ -1,6 +1,5 @@
 package seng440.vaccinepassport.ui.main
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -27,6 +26,7 @@ class MainFragment : Fragment() {
         super.onStart()
         model.getActionBarTitle().value = getString(R.string.app_name)
         model.getActionBarSubtitle().value = ""
+        model.gethideHeader().value = false
     }
 
 }

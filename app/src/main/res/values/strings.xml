@@ -49,4 +49,18 @@
     <string name="nfc_success">Success! Read passport with name:\n%NAME%</string>
     <string name="nfc_error">Passport scanning unsuccessful:\n%REASON%</string>
     <string name="nfc_taglost_error">Did not finish reading passport. Try again.</string>
+
+    <string name="lock_button_1">1</string>
+    <string name="lock_button_2">2</string>
+    <string name="lock_button_3">3</string>
+    <string name="lock_button_4">4</string>
+    <string name="lock_button_5">5</string>
+    <string name="lock_button_6">6</string>
+    <string name="lock_button_7">7</string>
+    <string name="lock_button_8">8</string>
+    <string name="lock_button_9">9</string>
+    <string name="lock_button_0">0</string>
+    <string name="lock_button_delete">delete</string>
+    <string name="lock_button_confirm">Confirm Pin</string>
+    <string name="bad_pin_msg">Incorrect Pin</string>
 </resources>

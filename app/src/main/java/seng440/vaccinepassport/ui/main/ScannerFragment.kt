@@ -84,6 +84,7 @@ class ScannerFragment : Fragment(), BarcodeScannedListener {
         super.onStart()
         model.getActionBarTitle().value = getString(R.string.scanner_actionbar_title)
         model.getActionBarSubtitle().value = getString(R.string.scanner_actionbar_subtitle)
+        model.gethideHeader().value = false
 
         if (!cameraState && hasPermission) {
             cameraState = true

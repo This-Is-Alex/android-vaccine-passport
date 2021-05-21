@@ -4,6 +4,7 @@ import android.content.Intent
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -16,6 +17,8 @@ import seng440.vaccinepassport.ui.main.MainFragment
 import seng440.vaccinepassport.ui.main.MainViewModel
 import seng440.vaccinepassport.ui.main.ScannerFragment
 import seng440.vaccinepassport.ui.main.SettingsFragment
+import androidx.preference.PreferenceManager
+import seng440.vaccinepassport.ui.main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -23,11 +26,25 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
+
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MainFragment.newInstance())
-                    .addToBackStack("main")
-                    .commit()
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+            var requirePin: Boolean = sharedPreferences.getBoolean("use_pin", false)
+
+            Log.e("TAG", "Require pin:${requirePin}")
+
+            if (requirePin) {
+                Log.e("TAG", "requiring pin now")
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, LockScreenFragment.newInstance())
+                        .addToBackStack("lockScreen")
+                        .commit()
+            } else {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, MainFragment.newInstance())
+                        .addToBackStack("main")
+                        .commit()
+            }
             //TODO show PIN/fingerprint unlock when set
         }
         val model: MainViewModel by viewModels()
@@ -36,6 +53,9 @@ class MainActivity : AppCompatActivity() {
         })
         model.getActionBarSubtitle().observe(this, Observer<String>{ subtitle ->
             supportActionBar?.subtitle = subtitle
+        })
+        model.gethideHeader().observe(this, Observer<Boolean>{ hide ->
+            if (hide) { supportActionBar?.hide() } else { supportActionBar?.show() }
         })
 
         model.getActionBarTitle().value = getString(R.string.app_name)

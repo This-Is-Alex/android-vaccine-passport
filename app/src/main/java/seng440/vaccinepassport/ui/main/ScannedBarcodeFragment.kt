@@ -55,6 +55,7 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
         super.onStart()
         model.getActionBarTitle().value = getString(R.string.showing_scan_result_title)
         model.getActionBarSubtitle().value = ""
+        model.gethideHeader().value = false
     }
 
     override fun onCreateView(
