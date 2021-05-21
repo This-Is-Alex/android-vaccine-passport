@@ -1,5 +1,6 @@
 package seng440.vaccinepassport
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -19,11 +20,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
+
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MainFragment.newInstance())
-                    .addToBackStack("main")
-                    .commit()
+            val requirePin: Boolean = getPreferences(Context.MODE_PRIVATE).getBoolean("use_pin", false)
+
+            if (requirePin) {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, MainFragment.newInstance())
+                        .addToBackStack("main")
+                        .commit()
+            } else {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, MainFragment.newInstance())
+                        .addToBackStack("main")
+                        .commit()
+            }
             //TODO show PIN/fingerprint unlock when set
         }
         val model: MainViewModel by viewModels()

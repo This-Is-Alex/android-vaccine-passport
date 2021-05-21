@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import seng440.vaccinepassport.R
 
-class MainFragment : Fragment() {
+class LockScreenFragment : Fragment() {
 
     companion object {
-        fun newInstance() = MainFragment()
+        fun newInstance() = LockScreenFragment()
     }
 
     private val model: MainViewModel by activityViewModels()
@@ -19,7 +19,7 @@ class MainFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.main_fragment, container, false)
+        return inflater.inflate(R.layout.lock_screen_fragment, container, false)
     }
 
     override fun onStart() {
