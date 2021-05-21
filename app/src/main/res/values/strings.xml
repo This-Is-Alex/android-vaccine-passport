@@ -52,7 +52,10 @@
     <string name="lock_button_8">8</string>
     <string name="lock_button_9">9</string>
     <string name="lock_button_0">0</string>
-    <string name="lock_button_finger">Use finger print</string>
+    <string name="lock_button_delete">delete</string>
+    <string name="lock_button_confirm">Confirm Pin</string>
+    <string name="bad_pin_msg">Incorrect Pin</string>
+
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

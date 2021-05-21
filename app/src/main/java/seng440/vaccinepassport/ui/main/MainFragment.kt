@@ -26,6 +26,7 @@ class MainFragment : Fragment() {
         super.onStart()
         model.getActionBarTitle().value = getString(R.string.app_name)
         model.getActionBarSubtitle().value = ""
+        model.gethideHeader().value = false
     }
 
 }

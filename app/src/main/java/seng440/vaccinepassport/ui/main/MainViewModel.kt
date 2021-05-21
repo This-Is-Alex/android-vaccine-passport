@@ -7,6 +7,7 @@ class MainViewModel : ViewModel() {
 
     private val actionBarTitle: MutableLiveData<String> = MutableLiveData("")
     private val actionBarSubtitle: MutableLiveData<String> = MutableLiveData("")
+    private val hideHeader: MutableLiveData<Boolean> = MutableLiveData(false)
 
     fun getActionBarTitle(): MutableLiveData<String> {
         return actionBarTitle
@@ -14,5 +15,9 @@ class MainViewModel : ViewModel() {
 
     fun getActionBarSubtitle(): MutableLiveData<String> {
         return actionBarSubtitle
+    }
+
+    fun gethideHeader(): MutableLiveData<Boolean> {
+        return hideHeader
     }
 }

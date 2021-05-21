@@ -1,18 +1,16 @@
 package seng440.vaccinepassport
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
-import seng440.vaccinepassport.ui.main.MainFragment
-import seng440.vaccinepassport.ui.main.MainViewModel
-import seng440.vaccinepassport.ui.main.ScannerFragment
-import seng440.vaccinepassport.ui.main.SettingsFragment
+import androidx.preference.PreferenceManager
+import seng440.vaccinepassport.ui.main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -22,12 +20,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
 
         if (savedInstanceState == null) {
-            val requirePin: Boolean = getPreferences(Context.MODE_PRIVATE).getBoolean("use_pin", false)
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+            var requirePin: Boolean = sharedPreferences.getBoolean("use_pin", false)
+
+            Log.e("TAG", "Require pin:${requirePin}")
 
             if (requirePin) {
+                Log.e("TAG", "requiring pin now")
                 supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, MainFragment.newInstance())
-                        .addToBackStack("main")
+                        .replace(R.id.container, LockScreenFragment.newInstance())
+                        .addToBackStack("lockScreen")
                         .commit()
             } else {
                 supportFragmentManager.beginTransaction()
@@ -43,6 +45,9 @@ class MainActivity : AppCompatActivity() {
         })
         model.getActionBarSubtitle().observe(this, Observer<String>{ subtitle ->
             supportActionBar?.subtitle = subtitle
+        })
+        model.gethideHeader().observe(this, Observer<Boolean>{ hide ->
+            if (hide) { supportActionBar?.hide() } else { supportActionBar?.show() }
         })
 
         model.getActionBarTitle().value = getString(R.string.app_name)
