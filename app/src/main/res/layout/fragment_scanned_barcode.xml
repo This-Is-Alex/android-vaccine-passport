@@ -9,20 +9,23 @@
     tools:context=".ui.main.ScannedBarcodeFragment">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/vpass_nfc_card"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_gravity="center"
         android:layout_weight="1"
         card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="12dp"
+        card_view:cardMaxElevation="0dp"
         card_view:cardUseCompatPadding="true">
 
         <TextView
             android:id="@+id/vpass_nfc_status"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:elevation="12dp"
             android:gravity="center|center_horizontal"
-            android:text="NFC TODO" />
+            android:text="@string/nfc_nonexistent"
+            android:textColor="@color/white" />
     </androidx.cardview.widget.CardView>
 
     <ScrollView

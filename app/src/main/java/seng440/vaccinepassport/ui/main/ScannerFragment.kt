@@ -204,7 +204,8 @@ class ScannerFragment : Fragment(), BarcodeScannedListener {
 
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.container,
-                ScannedBarcodeFragment()
+                ScannedBarcodeFragment(),
+                "show_scan_result"
             )
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .addToBackStack("show_scan_result")
