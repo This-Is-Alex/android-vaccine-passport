@@ -31,8 +31,6 @@ class MainActivity : AppCompatActivity() {
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
             var requirePin: Boolean = sharedPreferences.getBoolean("use_pin", false)
 
-            Log.e("TAG", "Require pin:${requirePin}")
-
             if (requirePin) {
                 Log.e("TAG", "requiring pin now")
                 supportFragmentManager.beginTransaction()

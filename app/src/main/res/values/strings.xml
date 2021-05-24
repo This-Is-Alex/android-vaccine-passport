@@ -60,6 +60,7 @@
     <string name="lock_button_8">8</string>
     <string name="lock_button_9">9</string>
     <string name="lock_button_0">0</string>
+    <string name="lock_button_finger">biometric unlock</string>
     <string name="lock_button_delete">delete</string>
     <string name="lock_button_confirm">Confirm Pin</string>
     <string name="bad_pin_msg">Incorrect Pin</string>

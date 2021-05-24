@@ -6,10 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
-import androidx.preference.SwitchPreference
+import androidx.preference.*
 import seng440.vaccinepassport.R
 
 
@@ -20,8 +17,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val hasPin: Boolean = sharedPreferences.getString("pin", "none") != "none"
+        var requirePin: Boolean = sharedPreferences.getBoolean("use_pin", false)
 
         preferenceScreen.findPreference<SwitchPreference>("use_pin")?.isEnabled = hasPin
+
+        preferenceScreen.findPreference<Preference>("use_pin")?.setOnPreferenceClickListener {
+            if (!sharedPreferences.getBoolean("use_pin", false)) {
+                val editor: Editor = sharedPreferences.edit()
+                editor.putBoolean("use_fingerprint", false)
+                editor.commit()
+                preferenceScreen.findPreference<SwitchPreference>("use_fingerprint")
+            }
+            preferenceScreen.findPreference<SwitchPreference>("use_fingerprint")?.isEnabled = sharedPreferences.getBoolean("use_pin", false)
+            true
+        }
+
+        preferenceScreen.findPreference<SwitchPreference>("use_fingerprint")?.isEnabled = hasPin && requirePin
 
         preferenceScreen.findPreference<Preference>("set_pin")?.setOnPreferenceClickListener {
 
@@ -35,6 +46,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             var confirmButton: Button = pin_entry.findViewById(R.id.lockButtonConfirm)
             confirmButton.visibility = View.GONE
+            var bioButton: Button = pin_entry.findViewById(R.id.lockButtonFinger)
+            bioButton.visibility = View.GONE
 
             pin_entry.findViewById<Button>(R.id.lockButton1)?.setOnClickListener {
                 numPress("1", pinDisplay)
@@ -74,6 +87,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             builder.setPositiveButton("Confirm Pin") { _, _ ->
                 val editor: Editor = sharedPreferences.edit()
                 editor.putString("pin", pinDisplay.text.toString())
+                preferenceScreen.findPreference<SwitchPreference>("use_pin")?.isEnabled = true
                 editor.commit()
             }
             builder.show()
