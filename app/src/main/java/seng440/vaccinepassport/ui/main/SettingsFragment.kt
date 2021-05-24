@@ -22,12 +22,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceScreen.findPreference<SwitchPreference>("use_pin")?.isEnabled = hasPin
 
         preferenceScreen.findPreference<Preference>("use_pin")?.setOnPreferenceClickListener {
-            if (!sharedPreferences.getBoolean("use_pin", false)) {
-                val editor: Editor = sharedPreferences.edit()
-                editor.putBoolean("use_fingerprint", false)
-                editor.commit()
-                preferenceScreen.findPreference<SwitchPreference>("use_fingerprint")
-            }
             preferenceScreen.findPreference<SwitchPreference>("use_fingerprint")?.isEnabled = sharedPreferences.getBoolean("use_pin", false)
             true
         }
