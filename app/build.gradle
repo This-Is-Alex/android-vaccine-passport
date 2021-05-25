@@ -76,4 +76,15 @@ dependencies {
     implementation 'com.embarkmobile:zxing-android-minimal:2.0.0@aar'
     implementation 'com.embarkmobile:zxing-android-integration:2.0.0@aar'
     implementation 'com.google.zxing:core:3.0.1'
+
+    implementation 'org.jmrtd:jmrtd:0.5.5'
+    implementation 'com.madgag.spongycastle:core:1.54.0.0'
+    implementation 'com.madgag.spongycastle:prov:1.54.0.0'
+    implementation 'com.madgag.spongycastle:pkix:1.54.0.0'
+    implementation 'com.madgag.spongycastle:pg:1.54.0.0'
+    implementation 'net.sf.scuba:scuba-sc-android:0.0.9'
+
+    def biometricLibraryVersion = "1.0.1"
+    implementation "androidx.biometric:biometric:$biometricLibraryVersion"
+
 }

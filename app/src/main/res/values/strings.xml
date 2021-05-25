@@ -27,4 +27,41 @@
     <string name="why_camera_permission_acknowledge">Ok</string>
 
     <string name="scan">Scan</string>
+    <string name="showing_scan_result_title">Viewing VaccPass Info</string>
+
+    <string name="vpass_vaccine_info">Vaccine Info</string>
+    <string name="vpass_passport_info">Passport Info</string>
+    <string name="vpass_person_info">Personal Details</string>
+    <string name="vpass_vaccine_type">Vaccine type</string>
+    <string name="vpass_vaccine_date">Vaccination date</string>
+    <string name="vpass_vaccine_dose">Dosage number</string>
+    <string name="vpass_vaccine_giver">Administered by</string>
+    <string name="vpass_vaccine_country">Administered in</string>
+    <string name="vpass_passport_passportno">Passport number</string>
+    <string name="vpass_passport_passportexpiry">Passport expiry date</string>
+    <string name="vpass_person_name">Full name</string>
+    <string name="vpass_person_dob">Date of birth</string>
+
+    <string name="nfc_nonexistent">NFC Unsupported on this device</string>
+    <string name="nfc_disabled">NFC is disabled in your device settings</string>
+    <string name="nfc_ready">Touch phone against ePassport to validate</string>
+    <string name="nfc_reading">Reading ePassport</string>
+    <string name="nfc_success">Success! Read passport with name:\n%NAME%</string>
+    <string name="nfc_error">Passport scanning unsuccessful:\n%REASON%</string>
+    <string name="nfc_taglost_error">Did not finish reading passport. Try again.</string>
+
+    <string name="lock_button_1">1</string>
+    <string name="lock_button_2">2</string>
+    <string name="lock_button_3">3</string>
+    <string name="lock_button_4">4</string>
+    <string name="lock_button_5">5</string>
+    <string name="lock_button_6">6</string>
+    <string name="lock_button_7">7</string>
+    <string name="lock_button_8">8</string>
+    <string name="lock_button_9">9</string>
+    <string name="lock_button_0">0</string>
+    <string name="lock_button_finger">biometric unlock</string>
+    <string name="lock_button_delete">delete</string>
+    <string name="lock_button_confirm">Confirm Pin</string>
+    <string name="bad_pin_msg">Incorrect Pin</string>
 </resources>
