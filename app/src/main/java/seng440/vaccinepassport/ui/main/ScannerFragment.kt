@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
@@ -26,7 +26,6 @@ import seng440.vaccinepassport.R
 import seng440.vaccinepassport.SerializableVPass
 import seng440.vaccinepassport.VaccineType
 import seng440.vaccinepassport.listeners.BarcodeScannedListener
-import seng440.vaccinepassport.room.VPassData
 import seng440.vaccinepassport.room.VPassLiveRoomApplication
 import seng440.vaccinepassport.room.VPassViewModel
 import seng440.vaccinepassport.room.VPassViewModelFactory
@@ -78,6 +77,15 @@ class ScannerFragment : Fragment(), BarcodeScannedListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_scanner, container, false)
+    }
+
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        view.findViewById<Button>(R.id.scanner_cancel_btn)?.setOnClickListener {
+            requireActivity().onBackPressed();
+        }
     }
 
     override fun onStart() {
