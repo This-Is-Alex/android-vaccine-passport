@@ -94,14 +94,22 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
 
         view.findViewById<CardView>(R.id.barcode_save_options).addView(setupSaveCancelView(inflater))
 
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val isBorderMode: Boolean = sharedPreferences.getBoolean("border_mode", false)
+        val isLogging: Boolean = sharedPreferences.getBoolean("logging_mode", false) && isBorderMode
+        if (!isBorderMode) {
+            view.findViewById<CardView>(R.id.barcode_save_options).addView(setupSaveCancelView(inflater))
+        } else if (isLogging) {
+            view.findViewById<CardView>(R.id.barcode_save_options).addView(setupApproveRejectView(inflater))
+        } else {    // Is border mode and not logging
+            view.findViewById<CardView>(R.id.barcode_save_options).addView(setupDiscardView(inflater))
+        }
+
         return view
     }
 
-    private fun setupSaveCancelView(inflater: LayoutInflater): View {
-        val buttonMenuView = inflater.inflate(R.layout.layout_barcode_save_cancel, null, false)
-
-        buttonMenuView.findViewById<Button>(R.id.save_barcode_btn).setOnClickListener(View.OnClickListener {
-            val dataObject = VPassData(
+    private fun savePassportData(approved: Boolean = true) {
+        val dataObject = VPassData(
                 passport.date,
                 passport.vacId,
                 passport.drAdministered,
@@ -110,15 +118,53 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
                 passport.passportNum,
                 passport.passportExpDate,
                 passport.dob,
-                passport.country)
-            viewModel.deleteVPass(dataObject)
-            viewModel.addVPass(dataObject)
+                passport.country,
+                approved)
+        viewModel.deleteVPass(dataObject)
+        viewModel.addVPass(dataObject)
+    }
 
-            Toast.makeText(context, "DEBUG: Saved successfully (please remove this one day)", Toast.LENGTH_SHORT).show()
+    private fun setupSaveCancelView(inflater: LayoutInflater): View {
+        val buttonMenuView = inflater.inflate(R.layout.layout_barcode_save_cancel, null, false)
+
+        buttonMenuView.findViewById<Button>(R.id.save_barcode_btn).setOnClickListener(View.OnClickListener {
+            savePassportData()
+
+            Toast.makeText(context, "Vaccine passport saved", Toast.LENGTH_SHORT).show()
             goBack()
         })
 
         buttonMenuView.findViewById<Button>(R.id.cancel_barcode_btn).setOnClickListener(View.OnClickListener {
+            goBack()
+        })
+
+        return buttonMenuView
+    }
+
+    private fun setupDiscardView(inflater: LayoutInflater): View {
+        val buttonMenuView = inflater.inflate(R.layout.layout_barcode_discard, null, false)
+
+        buttonMenuView.findViewById<Button>(R.id.discard_barcode_btn).setOnClickListener(View.OnClickListener {
+            goBack()
+        })
+
+        return buttonMenuView
+    }
+
+    private fun setupApproveRejectView(inflater: LayoutInflater): View {
+        val buttonMenuView = inflater.inflate(R.layout.layout_barcode_approve_reject, null, false)
+
+        buttonMenuView.findViewById<Button>(R.id.approve_barcode_btn).setOnClickListener(View.OnClickListener {
+            savePassportData(true)
+
+            Toast.makeText(context, "Vaccine passport approved", Toast.LENGTH_SHORT).show()
+            goBack()
+        })
+
+        buttonMenuView.findViewById<Button>(R.id.reject_barcode_btn).setOnClickListener(View.OnClickListener {
+            savePassportData(false)
+
+            Toast.makeText(context, "Vaccine passport rejected", Toast.LENGTH_SHORT).show()
             goBack()
         })
 

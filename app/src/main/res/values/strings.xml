@@ -30,6 +30,10 @@
     <string name="showing_scan_result_title">Viewing VaccPass Info</string>
 
     <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
+    <string name="approve">Approve</string>
+    <string name="reject">Reject</string>
 
     <string name="vpass_vaccine_info">Vaccine Info</string>
     <string name="vpass_passport_info">Passport Info</string>

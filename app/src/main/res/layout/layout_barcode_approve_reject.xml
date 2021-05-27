@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
     <Button
-        android:id="@+id/save_barcode_btn"
+        android:id="@+id/approve_barcode_btn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="@string/save" />
+        android:text="@string/approve" />
 
     <Button
-        android:id="@+id/cancel_barcode_btn"
+        android:id="@+id/reject_barcode_btn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="@string/cancel" />
+        android:text="@string/reject" />
 </LinearLayout>
