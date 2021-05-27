@@ -10,9 +10,9 @@ import seng440.vaccinepassport.R
 import seng440.vaccinepassport.VaccineType
 
 class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassListener: OnVPassListener)
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    : RecyclerView.Adapter<VPassAdapter.VPassViewHolder>() {
 
-    private inner class VPassViewHolder internal constructor(itemView: View/*, val onVPassListener: OnVPassListener*/)
+    class VPassViewHolder (itemView: View, val onVPassListener: OnVPassListener)
         : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         internal val vaccIdDisplay: TextView
@@ -35,30 +35,38 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
         }
 
         override fun onClick(view: View?) {
-            //OnVPassListener.onVPassClick(adapterPosition)
+            onVPassListener.onVPassClick(adapterPosition)
         }
 
-        internal fun bind(position: Int) {
-            val rawData = vPasses[position]
-            val vaccine = rawData.vacId
-            vaccIdDisplay.text = VaccineType.fromId(vaccine).toString()
-            drsName.text = rawData.drAdministered
-            dosageNum.text = rawData.dosageNum.toString()
-            vaccineDate.text = rawData.date.toString()
-            country.text = rawData.country
-            name.text = rawData.name
-            passportNum.text = rawData.passportNum
-        }
+//        internal fun bind(position: Int) {
+//            val rawData = vPasses[position]
+//            val vaccine = rawData.vacId
+//            vaccIdDisplay.text = VaccineType.fromId(vaccine).toString()
+//            drsName.text = rawData.drAdministered
+//            dosageNum.text = rawData.dosageNum.toString()
+//            vaccineDate.text = rawData.date.toString()
+//            country.text = rawData.country
+//            name.text = rawData.name
+//            passportNum.text = rawData.passportNum
+//        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VPassViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.vaccine_list_item, parent, false)
-        return VPassViewHolder(view/*, OnVPassListener*/)
+        return VPassViewHolder(view, onVPassListener)
     }
 
-    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        (viewHolder as VPassViewHolder).bind(position)
+    override fun onBindViewHolder(viewHolder: VPassViewHolder, position: Int) {
+        val rawData = vPasses[position]
+        val vaccine = rawData.vacId
+        viewHolder.vaccIdDisplay.text = VaccineType.fromId(vaccine).toString()
+        viewHolder.drsName.text = rawData.drAdministered
+        viewHolder.dosageNum.text = rawData.dosageNum.toString()
+        viewHolder.vaccineDate.text = rawData.date.toString()
+        viewHolder.country.text = rawData.country
+        viewHolder.name.text = rawData.name
+        viewHolder.passportNum.text = rawData.passportNum
     }
 
     override fun getItemCount() = vPasses.size

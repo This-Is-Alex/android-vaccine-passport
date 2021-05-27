@@ -19,9 +19,9 @@ class VPassRepository(private val vPassDao: VPassDao) {
         vPassDao.delete(vPass)
     }
 
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun getAll() : Flow<List<VPassData>> {
-        return vPassDao.getAll()
-    }
+//    @Suppress("RedundantSuspendModifier")
+//    @WorkerThread
+//    suspend fun getAll() : Flow<List<VPassData>> {
+//        return vPassDao.getAll()
+//    }
 }
