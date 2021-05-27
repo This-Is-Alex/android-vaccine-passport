@@ -7,9 +7,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import seng440.vaccinepassport.R
 import seng440.vaccinepassport.VaccineType
+import java.text.SimpleDateFormat
 
 class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassListener: OnVPassListener)
     : RecyclerView.Adapter<VPassAdapter.VPassViewHolder>() {
+
+    private val dateFormatter = SimpleDateFormat("dd-MMM-yyyy")
 
     class VPassViewHolder (itemView: View, val onVPassListener: OnVPassListener)
         : RecyclerView.ViewHolder(itemView), View.OnClickListener {
@@ -21,6 +24,7 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
         internal val country : TextView
         internal val name : TextView
         internal val passportNum : TextView
+
 
         init {
             vaccIdDisplay = itemView.findViewById(R.id.txt_vaccine_name)
@@ -50,7 +54,7 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
         viewHolder.vaccIdDisplay.text = VaccineType.fromId(vaccine).toString()
         viewHolder.drsName.text = rawData.drAdministered
         viewHolder.dosageNum.text = rawData.dosageNum.toString()
-        viewHolder.vaccineDate.text = rawData.date.toString()
+        viewHolder.vaccineDate.text = dateFormatter.format(rawData.date)
         viewHolder.country.text = rawData.country
         viewHolder.name.text = rawData.name
         viewHolder.passportNum.text = rawData.passportNum
