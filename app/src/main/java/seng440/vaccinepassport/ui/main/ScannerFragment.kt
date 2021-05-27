@@ -37,11 +37,6 @@ import java.util.concurrent.Executors
 
 
 class ScannerFragment : Fragment(), BarcodeScannedListener {
-
-    private val viewModel: VPassViewModel by activityViewModels() {
-        VPassViewModelFactory((activity?.application as VPassLiveRoomApplication).repository)
-    }
-
     private var cameraExecutor: ExecutorService? = null
     private var cameraState: Boolean = false
     private var hasPermission: Boolean = false
@@ -202,15 +197,11 @@ class ScannerFragment : Fragment(), BarcodeScannedListener {
         if (vaccineType == null || !isLettersOrDigits(passportNumber) || !isLettersOrDigits(country)) return
 
         Log.d("Barcode", "Read successfully")
-        /*val dataObject = VPassData(dateAdministered, vaccineType.id, doctorName, dosageNumber.toShort(), name, passportNumber, passportExpiry, dateOfBirth, country)
 
-        viewModel.deleteVPass(dataObject)
-        viewModel.addVPass(dataObject)
-
-        Log.d("Database", "Barcode saved successfully")*/
         val dataObject = SerializableVPass(dateAdministered, vaccineType.id, doctorName, dosageNumber.toShort(), name, passportNumber, passportExpiry, dateOfBirth, country)
         requireActivity().intent.putExtra("just_scanned", dataObject)
 
+        model.getShowingBarcodeInScannedBarcodeFragment().value = false
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.container,
                 ScannedBarcodeFragment(),
