@@ -21,7 +21,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val hasPin: Boolean = sharedPreferences.getString("pin", "none") != "none"
         var requirePin: Boolean = sharedPreferences.getBoolean("use_pin", false)
+        val isBorderMode: Boolean = sharedPreferences.getBoolean("border_mode", false)
 
+        preferenceScreen.findPreference<SwitchPreference>("logging_mode")?.isEnabled = isBorderMode
         preferenceScreen.findPreference<SwitchPreference>("use_pin")?.isEnabled = hasPin
 
         preferenceScreen.findPreference<Preference>("use_pin")?.setOnPreferenceClickListener {
@@ -92,6 +94,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
+        preferenceScreen.findPreference<Preference>("border_mode")?.setOnPreferenceClickListener {
+            preferenceScreen.findPreference<SwitchPreference>("logging_mode")?.isEnabled = sharedPreferences.getBoolean("border_mode", false)
+            true
+        }
 
     }
 

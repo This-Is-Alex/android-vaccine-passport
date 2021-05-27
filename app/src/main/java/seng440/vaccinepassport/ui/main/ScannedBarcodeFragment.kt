@@ -70,6 +70,7 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
     }
 
     private fun setupSaveCancelView(inflater: LayoutInflater): View {
+//        Todo: choose mode
         val buttonMenuView = inflater.inflate(R.layout.layout_barcode_save_cancel, null, false)
 
         buttonMenuView.findViewById<Button>(R.id.save_barcode_btn).setOnClickListener(View.OnClickListener {
