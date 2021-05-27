@@ -23,7 +23,6 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
         internal val vaccineDate : TextView
         internal val country : TextView
         internal val name : TextView
-        internal val passportNum : TextView
 
 
         init {
@@ -33,7 +32,6 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
             vaccineDate = itemView.findViewById(R.id.txt_vaccine_date)
             country = itemView.findViewById(R.id.txt_country)
             name = itemView.findViewById(R.id.txt_person_name)
-            passportNum = itemView.findViewById(R.id.txt_passport_number)
             itemView.setOnClickListener(this)
         }
 
@@ -57,7 +55,6 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
         viewHolder.vaccineDate.text = dateFormatter.format(rawData.date)
         viewHolder.country.text = rawData.country
         viewHolder.name.text = rawData.name
-        viewHolder.passportNum.text = rawData.passportNum
     }
 
     override fun getItemCount() = vPasses.size
