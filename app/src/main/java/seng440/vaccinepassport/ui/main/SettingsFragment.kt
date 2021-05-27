@@ -6,11 +6,14 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.preference.*
 import seng440.vaccinepassport.R
 
 
 class SettingsFragment : PreferenceFragmentCompat() {
+
+    private val model: MainViewModel by activityViewModels()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -18,7 +21,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val hasPin: Boolean = sharedPreferences.getString("pin", "none") != "none"
         var requirePin: Boolean = sharedPreferences.getBoolean("use_pin", false)
+        val isBorderMode: Boolean = sharedPreferences.getBoolean("border_mode", false)
 
+        preferenceScreen.findPreference<SwitchPreference>("logging_mode")?.isEnabled = isBorderMode
         preferenceScreen.findPreference<SwitchPreference>("use_pin")?.isEnabled = hasPin
 
         preferenceScreen.findPreference<Preference>("use_pin")?.setOnPreferenceClickListener {
@@ -89,8 +94,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
+        preferenceScreen.findPreference<Preference>("border_mode")?.setOnPreferenceClickListener {
+            preferenceScreen.findPreference<SwitchPreference>("logging_mode")?.isEnabled = sharedPreferences.getBoolean("border_mode", false)
+            true
+        }
 
     }
+
+    override fun onStart() {
+        super.onStart()
+        model.getActionBarTitle().value = getString(R.string.menu_settings)
+        model.getActionBarSubtitle().value = ""
+        model.gethideHeader().value = false
+    }
+
     fun numPress(num: String, pinDisplay: TextView) {
         Log.e("TAG", "Require pin:${num}")
         val display = pinDisplay.text.toString()

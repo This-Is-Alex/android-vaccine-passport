@@ -20,10 +20,11 @@ class VPassData (
     @ColumnInfo val passportNum: String,
     @ColumnInfo val passportExpDate: Int,
     @ColumnInfo val dob: Int,
-    @ColumnInfo val country: String) {
+    @ColumnInfo val country: String,
+    @ColumnInfo val approved: Boolean) {
 
-    constructor(date: Int, vacId: Byte, dr: String, dosageNum: Short, name: String, passportNum: String, passportExp: Int, dob: Int, country: String )
-            : this(0, date, vacId, dr, dosageNum, name, passportNum, passportExp, dob, country)
+    constructor(date: Int, vacId: Byte, dr: String, dosageNum: Short, name: String, passportNum: String, passportExp: Int, dob: Int, country: String, approved: Boolean)
+            : this(0, date, vacId, dr, dosageNum, name, passportNum, passportExp, dob, country, approved)
 
     override fun toString() = "Vaccine: $vacId | $date, $name"
 }

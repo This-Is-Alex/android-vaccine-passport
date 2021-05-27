@@ -2,6 +2,8 @@ package seng440.vaccinepassport.ui.main
 
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.res.Resources
+import android.graphics.Bitmap
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
@@ -10,25 +12,36 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
 import kotlinx.coroutines.launch
 import seng440.vaccinepassport.MainActivity
 import seng440.vaccinepassport.R
 import seng440.vaccinepassport.SerializableVPass
 import seng440.vaccinepassport.VaccineType
-import seng440.vaccinepassport.passportreader.*
+import seng440.vaccinepassport.passportreader.IDPassport
+import seng440.vaccinepassport.passportreader.NFCListenerCallback
+import seng440.vaccinepassport.passportreader.PassportReaderCallback
+import seng440.vaccinepassport.passportreader.PassportTask
 import seng440.vaccinepassport.room.VPassData
 import seng440.vaccinepassport.room.VPassLiveRoomApplication
 import seng440.vaccinepassport.room.VPassViewModel
 import seng440.vaccinepassport.room.VPassViewModelFactory
+import java.io.ByteArrayOutputStream
+import java.io.DataOutputStream
+import java.nio.charset.Charset
 import java.security.Security
 import java.text.SimpleDateFormat
+import java.util.*
 
 
 class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCallback {
@@ -36,6 +49,7 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
     private val dateFormatter = SimpleDateFormat("dd-MMM-yyyy")
     private lateinit var passport: SerializableVPass
     private var readingPassport: Boolean = false
+    private var nfc: Boolean = false
 
     private val viewModel: VPassViewModel by activityViewModels() {
         VPassViewModelFactory((activity?.application as VPassLiveRoomApplication).repository)
@@ -49,6 +63,7 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
         if (requireActivity().intent.hasExtra("just_scanned")) {
             passport = requireActivity().intent.getSerializableExtra("just_scanned") as SerializableVPass
         }
+        nfc = model.getShowingBarcodeInScannedBarcodeFragment().value == false
     }
 
     override fun onStart() {
@@ -64,16 +79,37 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
     ): View? {
         val view = inflater.inflate(R.layout.fragment_scanned_barcode, container, false)
 
+        if (nfc) {
+            val nfcView = inflater.inflate(R.layout.layout_nfc_feedback, null, false)
+            view.findViewById<CardView>(R.id.vpass_top_card).addView(nfcView)
+        } else {
+            val barcodeView = inflater.inflate(R.layout.layout_barcode_display, null, false)
+            val imageView = barcodeView.findViewById<ImageView>(R.id.vpass_barcode)
+            val image = generateBarcode(Resources.getSystem().displayMetrics.widthPixels)
+            imageView.setImageBitmap(image)
+
+
+            view.findViewById<CardView>(R.id.vpass_top_card).addView(barcodeView)
+        }
+
         view.findViewById<CardView>(R.id.barcode_save_options).addView(setupSaveCancelView(inflater))
+
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val isBorderMode: Boolean = sharedPreferences.getBoolean("border_mode", false)
+        val isLogging: Boolean = sharedPreferences.getBoolean("logging_mode", false) && isBorderMode
+        if (!isBorderMode) {
+            view.findViewById<CardView>(R.id.barcode_save_options).addView(setupSaveCancelView(inflater))
+        } else if (isLogging) {
+            view.findViewById<CardView>(R.id.barcode_save_options).addView(setupApproveRejectView(inflater))
+        } else {    // Is border mode and not logging
+            view.findViewById<CardView>(R.id.barcode_save_options).addView(setupDiscardView(inflater))
+        }
 
         return view
     }
 
-    private fun setupSaveCancelView(inflater: LayoutInflater): View {
-        val buttonMenuView = inflater.inflate(R.layout.layout_barcode_save_cancel, null, false)
-
-        buttonMenuView.findViewById<Button>(R.id.save_barcode_btn).setOnClickListener(View.OnClickListener {
-            val dataObject = VPassData(
+    private fun savePassportData(approved: Boolean = true) {
+        val dataObject = VPassData(
                 passport.date,
                 passport.vacId,
                 passport.drAdministered,
@@ -82,15 +118,53 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
                 passport.passportNum,
                 passport.passportExpDate,
                 passport.dob,
-                passport.country)
-            viewModel.deleteVPass(dataObject)
-            viewModel.addVPass(dataObject)
+                passport.country,
+                approved)
+        viewModel.deleteVPass(dataObject)
+        viewModel.addVPass(dataObject)
+    }
 
-            Toast.makeText(context, "DEBUG: Saved successfully (please remove this one day)", Toast.LENGTH_SHORT).show()
+    private fun setupSaveCancelView(inflater: LayoutInflater): View {
+        val buttonMenuView = inflater.inflate(R.layout.layout_barcode_save_cancel, null, false)
+
+        buttonMenuView.findViewById<Button>(R.id.save_barcode_btn).setOnClickListener(View.OnClickListener {
+            savePassportData()
+
+            Toast.makeText(context, "Vaccine passport saved", Toast.LENGTH_SHORT).show()
             goBack()
         })
 
         buttonMenuView.findViewById<Button>(R.id.cancel_barcode_btn).setOnClickListener(View.OnClickListener {
+            goBack()
+        })
+
+        return buttonMenuView
+    }
+
+    private fun setupDiscardView(inflater: LayoutInflater): View {
+        val buttonMenuView = inflater.inflate(R.layout.layout_barcode_discard, null, false)
+
+        buttonMenuView.findViewById<Button>(R.id.discard_barcode_btn).setOnClickListener(View.OnClickListener {
+            goBack()
+        })
+
+        return buttonMenuView
+    }
+
+    private fun setupApproveRejectView(inflater: LayoutInflater): View {
+        val buttonMenuView = inflater.inflate(R.layout.layout_barcode_approve_reject, null, false)
+
+        buttonMenuView.findViewById<Button>(R.id.approve_barcode_btn).setOnClickListener(View.OnClickListener {
+            savePassportData(true)
+
+            Toast.makeText(context, "Vaccine passport approved", Toast.LENGTH_SHORT).show()
+            goBack()
+        })
+
+        buttonMenuView.findViewById<Button>(R.id.reject_barcode_btn).setOnClickListener(View.OnClickListener {
+            savePassportData(false)
+
+            Toast.makeText(context, "Vaccine passport rejected", Toast.LENGTH_SHORT).show()
             goBack()
         })
 
@@ -129,43 +203,48 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
 
     override fun onResume() {
         super.onResume()
-        val adapter = NfcAdapter.getDefaultAdapter(requireContext())
-        Log.d("Passport", "Firing up NFC")
-        if (adapter != null) {
-            if (!adapter.isEnabled) {
-                requireView().findViewById<TextView>(R.id.vpass_nfc_status).text = getString(R.string.nfc_disabled)
-                requireView().findViewById<CardView>(R.id.vpass_nfc_card).setBackgroundResource(R.color.nfc_none)
-            } else {
-                if (!readingPassport) {
-                    requireView().findViewById<TextView>(R.id.vpass_nfc_status).text =
-                        getString(R.string.nfc_ready)
-                    requireView().findViewById<CardView>(R.id.vpass_nfc_card)
-                        .setBackgroundResource(R.color.nfc_ready)
+        if (nfc) {
+            val adapter = NfcAdapter.getDefaultAdapter(requireContext())
+            Log.d("Passport", "Firing up NFC")
+            if (adapter != null) {
+                if (!adapter.isEnabled) {
+                    requireView().findViewById<TextView>(R.id.vpass_nfc_status).text = getString(R.string.nfc_disabled)
+                    requireView().findViewById<CardView>(R.id.vpass_top_card).setBackgroundResource(R.color.nfc_none)
+                } else {
+                    if (!readingPassport) {
+                        requireView().findViewById<TextView>(R.id.vpass_nfc_status).text =
+                            getString(R.string.nfc_ready)
+                        requireView().findViewById<CardView>(R.id.vpass_top_card)
+                            .setBackgroundResource(R.color.nfc_ready)
+                    }
+                    val intent = Intent(requireActivity(), requireActivity().javaClass)
+                    intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    val pendingIntent =
+                        PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                    val filter = arrayOf(arrayOf("android.nfc.tech.IsoDep"))
+                    adapter.enableForegroundDispatch(requireActivity(), pendingIntent, null, filter)
                 }
-                val intent = Intent(requireActivity(), requireActivity().javaClass)
-                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                val pendingIntent =
-                    PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-                val filter = arrayOf(arrayOf("android.nfc.tech.IsoDep"))
-                adapter.enableForegroundDispatch(requireActivity(), pendingIntent, null, filter)
+            } else {
+                requireView().findViewById<TextView>(R.id.vpass_nfc_status).text = getString(R.string.nfc_nonexistent)
+                requireView().findViewById<TextView>(R.id.vpass_top_card).setBackgroundResource(R.color.nfc_none)
             }
-        } else {
-            requireView().findViewById<TextView>(R.id.vpass_nfc_status).text = getString(R.string.nfc_nonexistent)
-            requireView().findViewById<TextView>(R.id.vpass_nfc_card).setBackgroundResource(R.color.nfc_none)
         }
     }
 
     override fun onPause() {
         super.onPause()
-        val adapter = NfcAdapter.getDefaultAdapter(requireContext())
-        adapter?.disableForegroundDispatch(requireActivity())
+        if (nfc) {
+            val adapter = NfcAdapter.getDefaultAdapter(requireContext())
+            adapter?.disableForegroundDispatch(requireActivity())
+        }
     }
 
     override fun onAvailableNFC(tag: Tag) {
+        if (!nfc) return
         readingPassport = true
         Log.d("Passport", "Got tag")
         requireView().findViewById<TextView>(R.id.vpass_nfc_status).text = getString(R.string.nfc_reading)
-        requireView().findViewById<CardView>(R.id.vpass_nfc_card).setBackgroundResource(R.color.nfc_ready)
+        requireView().findViewById<CardView>(R.id.vpass_top_card).setBackgroundResource(R.color.nfc_ready)
         lifecycleScope.launch {
             val task = PassportTask().readTag(tag, passport, requireContext(), getBarcodeCallback())
         }
@@ -176,13 +255,15 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
     }
 
     override fun onReadSuccess(passport: IDPassport) {
+        if (!nfc) return
         readingPassport = false
         requireView().findViewById<TextView>(R.id.vpass_nfc_status).text = getString(R.string.nfc_success)
             .replace("%NAME%", passport.fullName!!)
-        requireView().findViewById<CardView>(R.id.vpass_nfc_card).setBackgroundResource(R.color.nfc_success)
+        requireView().findViewById<CardView>(R.id.vpass_top_card).setBackgroundResource(R.color.nfc_success)
     }
 
     override fun onReadFailure(msg: String) {
+        if (!nfc) return
         readingPassport = false
         var message = msg
         if (message == "Tag was lost.") {
@@ -190,6 +271,51 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
         }
         requireView().findViewById<TextView>(R.id.vpass_nfc_status).text = getString(R.string.nfc_error)
             .replace("%REASON%", message)
-        requireView().findViewById<CardView>(R.id.vpass_nfc_card).setBackgroundResource(R.color.nfc_fail)
+        requireView().findViewById<CardView>(R.id.vpass_top_card).setBackgroundResource(R.color.nfc_fail)
+    }
+
+    private fun generateBarcode(size: Int): Bitmap? {
+        val output = ByteArrayOutputStream()
+        val dos = DataOutputStream(output)
+
+        dos.writeInt(passport.date)
+        dos.writeByte(passport.vacId.toInt())
+        dos.writeByte(passport.dosageNum.toInt())
+        dos.write(passport.passportNum.toByteArray(Charset.defaultCharset()))
+        for (i in 1..(9 - passport.passportNum.length)) {
+            dos.writeByte(0) //zero pad the passport num
+        }
+        dos.writeInt(passport.passportExpDate)
+        dos.writeInt(passport.dob)
+        dos.write(passport.country.toByteArray(Charset.defaultCharset()))
+        dos.writeByte(passport.name.length)
+        dos.write(passport.name.toByteArray(Charset.defaultCharset()))
+        dos.writeByte(passport.drAdministered.length)
+        dos.write(passport.drAdministered.toByteArray(Charset.defaultCharset()))
+
+        dos.close()
+        output.close()
+
+        val data = String(output.toByteArray(), Charset.forName("ISO_8859-15"))
+        Log.e("Data", data)
+        Log.e("data", Arrays.toString(output.toByteArray()))
+        Log.e("Data", output.toByteArray().joinToString("") { " 0x" + it.toString(16).padStart(2, '0') })
+
+        val bitMatrix = MultiFormatWriter().encode(data, BarcodeFormat.AZTEC, size, size)
+        val width = bitMatrix.width
+        val height = bitMatrix.height
+        val pixels = IntArray(width * height)
+        for (i in 0 until height) {
+            for (j in 0 until width) {
+                if (bitMatrix[j, i]) {
+                    pixels[i * width + j] = -0x1000000
+                } else {
+                    pixels[i * width + j] = -0x1
+                }
+            }
+        }
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        bitmap.setPixels(pixels, 0, width, 0, 0, width, height)
+        return bitmap
     }
 }

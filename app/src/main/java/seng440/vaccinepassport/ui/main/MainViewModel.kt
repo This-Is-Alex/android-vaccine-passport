@@ -9,6 +9,8 @@ class MainViewModel : ViewModel() {
     private val actionBarSubtitle: MutableLiveData<String> = MutableLiveData("")
     private val hideHeader: MutableLiveData<Boolean> = MutableLiveData(false)
 
+    private val showBarcodeInScannedBarcodeFragment: MutableLiveData<Boolean> = MutableLiveData(false)
+
     fun getActionBarTitle(): MutableLiveData<String> {
         return actionBarTitle
     }
@@ -19,5 +21,9 @@ class MainViewModel : ViewModel() {
 
     fun gethideHeader(): MutableLiveData<Boolean> {
         return hideHeader
+    }
+
+    fun getShowingBarcodeInScannedBarcodeFragment(): MutableLiveData<Boolean> {
+        return showBarcodeInScannedBarcodeFragment
     }
 }

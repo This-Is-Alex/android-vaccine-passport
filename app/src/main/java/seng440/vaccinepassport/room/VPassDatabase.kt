@@ -9,7 +9,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 
-@Database(entities = [VPassData::class], version = 1)
+@Database(entities = [VPassData::class], version = 2)
 abstract class VPassDatabase : RoomDatabase() {
     abstract fun vPassDao(): VPassDao
 
