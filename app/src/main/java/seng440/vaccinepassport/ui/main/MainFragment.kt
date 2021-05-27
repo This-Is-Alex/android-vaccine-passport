@@ -49,8 +49,7 @@ class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
     }
 
     override fun onVPassClick(position: Int) {
-        Log.e("Tag", "clicked")
-        TODO("Not yet implemented")
+
     }
 
     override fun onVPassDelete(vpass: VPassData) {

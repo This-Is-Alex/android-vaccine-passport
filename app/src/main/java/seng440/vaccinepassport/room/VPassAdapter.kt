@@ -1,6 +1,5 @@
 package seng440.vaccinepassport.room
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,18 +36,6 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
         override fun onClick(view: View?) {
             onVPassListener.onVPassClick(adapterPosition)
         }
-
-//        internal fun bind(position: Int) {
-//            val rawData = vPasses[position]
-//            val vaccine = rawData.vacId
-//            vaccIdDisplay.text = VaccineType.fromId(vaccine).toString()
-//            drsName.text = rawData.drAdministered
-//            dosageNum.text = rawData.dosageNum.toString()
-//            vaccineDate.text = rawData.date.toString()
-//            country.text = rawData.country
-//            name.text = rawData.name
-//            passportNum.text = rawData.passportNum
-//        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VPassViewHolder {
@@ -82,8 +69,4 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
         fun onVPassDelete(vPass: VPassData)
         abstract fun getPreferences(modePrivate: Int): Any
     }
-
-//    fun deleteMap(position: Int) {
-//        viewModel.deleteMap(viewModel.friends.value!![position])
-//    }
 }
