@@ -7,13 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import seng440.vaccinepassport.MainActivity
 import seng440.vaccinepassport.R
+import seng440.vaccinepassport.SerializableVPass
+import seng440.vaccinepassport.VaccineType
 import seng440.vaccinepassport.room.*
+import java.io.ByteArrayInputStream
+import java.io.DataInputStream
 
 class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
 
@@ -49,7 +54,18 @@ class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
     }
 
     override fun onVPassClick(position: Int) {
-
+        Log.i("CLICK", viewModel.Vpasses.value!![position].name)
+        val dataObject = getSerialisedVPass(viewModel.Vpasses.value!![position])
+        requireActivity().intent.putExtra("just_scanned", dataObject)
+        model.getShowingBarcodeInScannedBarcodeFragment().value = true
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.container,
+                ScannedBarcodeFragment(),
+                "show_scan_result"
+            )
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .addToBackStack("show_scan_result")
+            .commit()
     }
 
     override fun onVPassDelete(vpass: VPassData) {
@@ -62,5 +78,17 @@ class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
         TODO("Not yet implemented")
     }
 
-
+    private fun getSerialisedVPass(vpass: VPassData) : SerializableVPass {
+        Log.i("VPASS Received", vpass.name)
+        val dateAdministered = vpass.date
+        val vaccineType = vpass.vacId
+        val dosageNumber = vpass.dosageNum
+        val passportNumber = vpass.passportNum
+        val passportExpiry = vpass.passportExpDate
+        val dateOfBirth = vpass.dob
+        val country = vpass.country
+        val name = vpass.name
+        val doctorName = vpass.drAdministered
+        return SerializableVPass(dateAdministered, vaccineType, doctorName, dosageNumber, name, passportNumber, passportExpiry, dateOfBirth, country)
+    }
 }
