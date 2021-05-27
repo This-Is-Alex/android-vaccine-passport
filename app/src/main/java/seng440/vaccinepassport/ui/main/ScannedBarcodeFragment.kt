@@ -62,12 +62,16 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
         Security.addProvider(org.spongycastle.jce.provider.BouncyCastleProvider())
 
         displayingSavedData = false
+        Log.d("Intent", "Just Scanned: " + requireActivity().intent.hasExtra("just_scanned"))
+        Log.d("Intent", "Vaccine Data: " + requireActivity().intent.hasExtra("vaccineData"))
         if (requireActivity().intent.hasExtra("just_scanned")) {
             passport = requireActivity().intent.getSerializableExtra("just_scanned") as SerializableVPass
+            requireActivity().intent.removeExtra("just_scanned")
         } else if (requireActivity().intent.hasExtra("vaccineData")) {
             Log.d("DATA", "Extracting data")
             passport = requireActivity().intent.getSerializableExtra("vaccineData") as SerializableVPass
             displayingSavedData = true
+            requireActivity().intent.removeExtra("vaccineData")
         }
         nfc = model.getShowingBarcodeInScannedBarcodeFragment().value == false
         Log.d("DATA", "displayingSavedData = " + displayingSavedData.toString())
