@@ -54,9 +54,9 @@ class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
     }
 
     override fun onVPassClick(position: Int) {
-        Log.i("CLICK", viewModel.Vpasses.value!![position].name)
+        Log.i("CLICK", "Displaying Data for " + viewModel.Vpasses.value!![position].name)
         val dataObject = getSerialisedVPass(viewModel.Vpasses.value!![position])
-        requireActivity().intent.putExtra("just_scanned", dataObject)
+        requireActivity().intent.putExtra("vaccineData", dataObject)
         model.getShowingBarcodeInScannedBarcodeFragment().value = true
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.container,

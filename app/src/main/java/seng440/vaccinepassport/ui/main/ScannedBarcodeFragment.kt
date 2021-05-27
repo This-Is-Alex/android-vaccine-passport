@@ -50,6 +50,7 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
     private lateinit var passport: SerializableVPass
     private var readingPassport: Boolean = false
     private var nfc: Boolean = false
+    private var displayingSavedData: Boolean = false
 
     private val viewModel: VPassViewModel by activityViewModels() {
         VPassViewModelFactory((activity?.application as VPassLiveRoomApplication).repository)
@@ -60,10 +61,16 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
 
         Security.addProvider(org.spongycastle.jce.provider.BouncyCastleProvider())
 
+        displayingSavedData = false
         if (requireActivity().intent.hasExtra("just_scanned")) {
             passport = requireActivity().intent.getSerializableExtra("just_scanned") as SerializableVPass
+        } else if (requireActivity().intent.hasExtra("vaccineData")) {
+            Log.d("DATA", "Extracting data")
+            passport = requireActivity().intent.getSerializableExtra("vaccineData") as SerializableVPass
+            displayingSavedData = true
         }
         nfc = model.getShowingBarcodeInScannedBarcodeFragment().value == false
+        Log.d("DATA", "displayingSavedData = " + displayingSavedData.toString())
     }
 
     override fun onStart() {
@@ -97,7 +104,9 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val isBorderMode: Boolean = sharedPreferences.getBoolean("border_mode", false)
         val isLogging: Boolean = sharedPreferences.getBoolean("logging_mode", false) && isBorderMode
-        if (!isBorderMode) {
+        if (displayingSavedData) {
+            view.findViewById<CardView>(R.id.barcode_save_options).addView(setupCloseView(inflater))
+        } else if (!isBorderMode) {
             view.findViewById<CardView>(R.id.barcode_save_options).addView(setupSaveCancelView(inflater))
         } else if (isLogging) {
             view.findViewById<CardView>(R.id.barcode_save_options).addView(setupApproveRejectView(inflater))
@@ -145,6 +154,16 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
         val buttonMenuView = inflater.inflate(R.layout.layout_barcode_discard, null, false)
 
         buttonMenuView.findViewById<Button>(R.id.discard_barcode_btn).setOnClickListener(View.OnClickListener {
+            goBack()
+        })
+
+        return buttonMenuView
+    }
+
+    private fun setupCloseView(inflater: LayoutInflater): View {
+        val buttonMenuView = inflater.inflate(R.layout.layout_barcode_close, null, false)
+
+        buttonMenuView.findViewById<Button>(R.id.close_barcode_btn).setOnClickListener(View.OnClickListener {
             goBack()
         })
 
