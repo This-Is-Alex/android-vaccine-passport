@@ -18,7 +18,7 @@
         android:checkable="true"
         android:clickable="true"
         android:focusable="true"
-        app:cardBackgroundColor="#E1E1E1"
+        app:cardBackgroundColor="@color/off_white"
         app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
