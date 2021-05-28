@@ -12,13 +12,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import seng440.vaccinepassport.MainActivity
 import seng440.vaccinepassport.R
 import seng440.vaccinepassport.SerializableVPass
-import seng440.vaccinepassport.VaccineType
 import seng440.vaccinepassport.room.*
-import java.io.ByteArrayInputStream
-import java.io.DataInputStream
 
 class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
 
@@ -36,7 +32,7 @@ class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         val view  = inflater.inflate(R.layout.main_fragment, container, false)
-        val adapter = VPassAdapter(listOf(), this)
+        val adapter = VPassAdapter(listOf(), this, requireContext())
         viewModel.Vpasses.observe(viewLifecycleOwner) { newPasses ->
             adapter.setData(newPasses)
         }
@@ -69,9 +65,17 @@ class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
     }
 
     override fun onVPassDelete(vpass: VPassData) {
-        Log.e("TAG", "delete: ${vpass}")
-        viewModel.deleteVPass(vpass)
-        Toast.makeText(activity, "Vaccine deleted", Toast.LENGTH_SHORT).show()
+        val builder = android.app.AlertDialog.Builder(context)
+        builder.setPositiveButton(getString(R.string.delete)) { _, _ ->
+            Log.e("TAG", "delete: ${vpass}")
+            viewModel.deleteVPass(vpass)
+            Toast.makeText(activity, "Vaccine deleted", Toast.LENGTH_SHORT).show()
+        }
+        builder.setNegativeButton(android.R.string.cancel) { _, _ ->
+            Toast.makeText(context, "Deletion canceled", Toast.LENGTH_SHORT).show()
+        }
+        builder.setMessage(getString(R.string.confirm_delete_msg))
+        builder.show()
     }
 
     override fun getPreferences(modePrivate: Int): Any {

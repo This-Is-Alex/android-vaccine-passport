@@ -51,6 +51,9 @@
     <string name="vpass_passport_passportexpiry">Passport expiry date</string>
     <string name="vpass_person_name">Full name</string>
     <string name="vpass_person_dob">Date of birth</string>
+    <string name="vpass_approval_status">Approval status</string>
+    <string name="vpass_approved">Approved</string>
+    <string name="vpass_rejected">Rejected</string>
 
     <string name="nfc_nonexistent">NFC Unsupported on this device</string>
     <string name="nfc_disabled">NFC is disabled in your device settings</string>
@@ -71,7 +74,9 @@
     <string name="lock_button_9">9</string>
     <string name="lock_button_0">0</string>
     <string name="lock_button_finger">biometric unlock</string>
-    <string name="lock_button_delete">delete</string>
+    <string name="delete">delete</string>
     <string name="lock_button_confirm">Confirm Pin</string>
     <string name="bad_pin_msg">Incorrect Pin</string>
+
+    <string name="confirm_delete_msg">Are you sure you want to delete this VPass?</string>
 </resources>
