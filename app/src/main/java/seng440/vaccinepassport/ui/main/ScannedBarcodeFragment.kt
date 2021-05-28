@@ -199,6 +199,7 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
             PreferenceManager.getDefaultSharedPreferences(requireContext())
         val borderMode: Boolean = sharedPreferences.getBoolean("border_mode", false)
         val destination = if (borderMode) "scanner" else "main"
+        Log.d("Navigate", "Closing barcode to ${destination}")
 
         requireActivity().supportFragmentManager.popBackStack(destination, 0)
     }
