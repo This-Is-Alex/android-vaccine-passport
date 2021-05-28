@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import kotlinx.coroutines.launch
@@ -47,7 +48,7 @@ import java.util.*
 class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCallback {
     private val model: MainViewModel by activityViewModels()
     private val dateFormatter = SimpleDateFormat("dd-MMM-yyyy")
-    private lateinit var passport: SerializableVPass
+    private var passport: SerializableVPass? = null
     private var readingPassport: Boolean = false
     private var nfc: Boolean = false
     private var displayingSavedData: Boolean = false
@@ -61,20 +62,11 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
 
         Security.addProvider(org.spongycastle.jce.provider.BouncyCastleProvider())
 
-        displayingSavedData = false
-        Log.d("Intent", "Just Scanned: " + requireActivity().intent.hasExtra("just_scanned"))
-        Log.d("Intent", "Vaccine Data: " + requireActivity().intent.hasExtra("vaccineData"))
-        if (requireActivity().intent.hasExtra("just_scanned")) {
-            passport = requireActivity().intent.getSerializableExtra("just_scanned") as SerializableVPass
-            requireActivity().intent.removeExtra("just_scanned")
-        } else if (requireActivity().intent.hasExtra("vaccineData")) {
-            Log.d("DATA", "Extracting data")
-            passport = requireActivity().intent.getSerializableExtra("vaccineData") as SerializableVPass
+        if (model.getShowingBarcodeInScannedBarcodeFragment().value == true) {
             displayingSavedData = true
-            requireActivity().intent.removeExtra("vaccineData")
         }
+        passport = model.barcodeToDisplay.value
         nfc = model.getShowingBarcodeInScannedBarcodeFragment().value == false
-        Log.d("DATA", "displayingSavedData = " + displayingSavedData.toString())
     }
 
     override fun onStart() {
@@ -122,16 +114,17 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
     }
 
     private fun savePassportData(approved: Boolean = true) {
+        if (passport == null) return
         val dataObject = VPassData(
-                passport.date,
-                passport.vacId,
-                passport.drAdministered,
-                passport.dosageNum,
-                passport.name,
-                passport.passportNum,
-                passport.passportExpDate,
-                passport.dob,
-                passport.country,
+                passport!!.date,
+                passport!!.vacId,
+                passport!!.drAdministered,
+                passport!!.dosageNum,
+                passport!!.name,
+                passport!!.passportNum,
+                passport!!.passportExpDate,
+                passport!!.dob,
+                passport!!.country,
                 approved)
         viewModel.deleteVPass(dataObject)
         viewModel.addVPass(dataObject)
@@ -201,28 +194,37 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
         val destination = if (borderMode) "scanner" else "main"
         Log.d("Navigate", "Closing barcode to ${destination}")
 
-        requireActivity().supportFragmentManager.popBackStack(destination, 0)
+        if (destination == "scanner") {
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scannow
+        } else {
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_passports
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val date = MainActivity.timestampToDate(passport.date)
-        val dob = MainActivity.timestampToDate(passport.dob)
-        val passportExpiry = MainActivity.timestampToDate(passport.passportExpDate)
+        if (passport != null) {
+            val date = MainActivity.timestampToDate(passport!!.date)
+            val dob = MainActivity.timestampToDate(passport!!.dob)
+            val passportExpiry = MainActivity.timestampToDate(passport!!.passportExpDate)
 
 
-        view.findViewById<TextView>(R.id.vpass_vaccine_date).text = dateFormatter.format(date)
-        view.findViewById<TextView>(R.id.vpass_vaccine_type).text = VaccineType.fromId(passport.vacId)?.fullName
-        view.findViewById<TextView>(R.id.vpass_vaccine_giver).text = passport.drAdministered
-        view.findViewById<TextView>(R.id.vpass_vaccine_country).text = passport.country
-        view.findViewById<TextView>(R.id.vpass_vaccine_dose).text = passport.dosageNum.toString()
+            view.findViewById<TextView>(R.id.vpass_vaccine_date).text = dateFormatter.format(date)
+            view.findViewById<TextView>(R.id.vpass_vaccine_type).text =
+                VaccineType.fromId(passport!!.vacId)?.fullName
+            view.findViewById<TextView>(R.id.vpass_vaccine_giver).text = passport!!.drAdministered
+            view.findViewById<TextView>(R.id.vpass_vaccine_country).text = passport!!.country
+            view.findViewById<TextView>(R.id.vpass_vaccine_dose).text =
+                passport!!.dosageNum.toString()
 
-        view.findViewById<TextView>(R.id.vpass_passport_passportno).text = passport.passportNum
-        view.findViewById<TextView>(R.id.vpass_passport_passportexpiry).text = dateFormatter.format(passportExpiry)
+            view.findViewById<TextView>(R.id.vpass_passport_passportno).text = passport!!.passportNum
+            view.findViewById<TextView>(R.id.vpass_passport_passportexpiry).text =
+                dateFormatter.format(passportExpiry)
 
-        view.findViewById<TextView>(R.id.vpass_person_name).text = passport.name
-        view.findViewById<TextView>(R.id.vpass_person_dob).text = dateFormatter.format(dob)
+            view.findViewById<TextView>(R.id.vpass_person_name).text = passport!!.name
+            view.findViewById<TextView>(R.id.vpass_person_dob).text = dateFormatter.format(dob)
+        }
     }
 
     override fun onResume() {
@@ -265,12 +267,13 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
 
     override fun onAvailableNFC(tag: Tag) {
         if (!nfc) return
+        if (passport == null) return
         readingPassport = true
         Log.d("Passport", "Got tag")
         requireView().findViewById<TextView>(R.id.vpass_nfc_status).text = getString(R.string.nfc_reading)
         requireView().findViewById<CardView>(R.id.vpass_top_card).setBackgroundResource(R.color.nfc_ready)
         lifecycleScope.launch {
-            val task = PassportTask().readTag(tag, passport, requireContext(), getBarcodeCallback())
+            val task = PassportTask().readTag(tag, passport!!, requireContext(), getBarcodeCallback())
         }
     }
 
@@ -299,23 +302,24 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
     }
 
     private fun generateBarcode(size: Int): Bitmap? {
+        if (passport == null) return null
         val output = ByteArrayOutputStream()
         val dos = DataOutputStream(output)
 
-        dos.writeInt(passport.date)
-        dos.writeByte(passport.vacId.toInt())
-        dos.writeByte(passport.dosageNum.toInt())
-        dos.write(passport.passportNum.toByteArray(Charset.defaultCharset()))
-        for (i in 1..(9 - passport.passportNum.length)) {
+        dos.writeInt(passport!!.date)
+        dos.writeByte(passport!!.vacId.toInt())
+        dos.writeByte(passport!!.dosageNum.toInt())
+        dos.write(passport!!.passportNum.toByteArray(Charset.defaultCharset()))
+        for (i in 1..(9 - passport!!.passportNum.length)) {
             dos.writeByte(0) //zero pad the passport num
         }
-        dos.writeInt(passport.passportExpDate)
-        dos.writeInt(passport.dob)
-        dos.write(passport.country.toByteArray(Charset.defaultCharset()))
-        dos.writeByte(passport.name.length)
-        dos.write(passport.name.toByteArray(Charset.defaultCharset()))
-        dos.writeByte(passport.drAdministered.length)
-        dos.write(passport.drAdministered.toByteArray(Charset.defaultCharset()))
+        dos.writeInt(passport!!.passportExpDate)
+        dos.writeInt(passport!!.dob)
+        dos.write(passport!!.country.toByteArray(Charset.defaultCharset()))
+        dos.writeByte(passport!!.name.length)
+        dos.write(passport!!.name.toByteArray(Charset.defaultCharset()))
+        dos.writeByte(passport!!.drAdministered.length)
+        dos.write(passport!!.drAdministered.toByteArray(Charset.defaultCharset()))
 
         dos.close()
         output.close()

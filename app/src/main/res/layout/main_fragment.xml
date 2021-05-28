@@ -14,18 +14,15 @@
         android:gravity="right"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btn_scan"
-            android:layout_width="74dp"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:text="@string/scan" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/vaccine_list_item" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            tools:listitem="@layout/vaccine_list_item">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
     </LinearLayout>
 
 </FrameLayout>

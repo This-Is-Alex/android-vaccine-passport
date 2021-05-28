@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
@@ -18,6 +19,7 @@ import seng440.vaccinepassport.ui.main.MainViewModel
 import seng440.vaccinepassport.ui.main.ScannerFragment
 import seng440.vaccinepassport.ui.main.SettingsFragment
 import androidx.preference.PreferenceManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import seng440.vaccinepassport.ui.main.*
 import java.util.*
 
@@ -35,15 +37,20 @@ class MainActivity : AppCompatActivity() {
                 Log.e("TAG", "requiring pin now")
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.container, LockScreenFragment.newInstance())
-                        .addToBackStack("lockScreen")
                         .commit()
             } else {
                 supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, MainFragment.newInstance())
-                        .addToBackStack("main")
+                    .replace(R.id.container, MainFragment.newInstance())
+                    .addToBackStack("main")
+                    .commit()
+                if (sharedPreferences.getBoolean("border_mode", false)) {
+                    findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scannow
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, ScannerFragment.newInstance())
+                        .addToBackStack("scanner")
                         .commit()
+                }
             }
-            //TODO show PIN/fingerprint unlock when set
         }
         val model: MainViewModel by viewModels()
         model.getActionBarTitle().observe(this, Observer<String>{ title ->
@@ -55,37 +62,39 @@ class MainActivity : AppCompatActivity() {
         model.gethideHeader().observe(this, Observer<Boolean>{ hide ->
             if (hide) { supportActionBar?.hide() } else { supportActionBar?.show() }
         })
+        model.showBottomNavBar.observe(this, Observer<Boolean> { show ->
+            findViewById<BottomNavigationView>(R.id.bottom_navigation).visibility =
+                if (show) View.VISIBLE else View.GONE
+        })
 
         model.getActionBarTitle().value = getString(R.string.app_name)
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.main_menu, menu)
-
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_settings -> {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.container,
-                        SettingsFragment()
-                    )
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .addToBackStack("scanner")
-                    .commit()
-                true
+        findViewById<BottomNavigationView>(R.id.bottom_navigation).setOnNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.menu_passports -> {
+                    supportFragmentManager.popBackStack("main", 0)
+                    true
+                }
+                R.id.menu_scannow -> {
+                    if (supportFragmentManager.findFragmentByTag("scanner") != null) {
+                        supportFragmentManager.popBackStack("scanner", 0)
+                    } else {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, ScannerFragment.newInstance())
+                            .addToBackStack("scanner")
+                            .commit()
+                    }
+                    true
+                }
+                R.id.menu_settings -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, SettingsFragment())
+                        .addToBackStack("settings")
+                        .commit()
+                    true
+                }
+                else -> false
             }
-            R.id.menu_scan_temp -> {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, ScannerFragment.newInstance())
-                    .addToBackStack("scanner")
-                    .commit()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -102,6 +111,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        val currentFrag = supportFragmentManager.findFragmentById(R.id.container)
+        if (currentFrag is MainFragment || currentFrag is LockScreenFragment) {
+            finish()
+        } else {
+            super.onBackPressed()
+        }
+    }
 
     companion object {
         fun timestampToDate(timestamp: Int): Date {

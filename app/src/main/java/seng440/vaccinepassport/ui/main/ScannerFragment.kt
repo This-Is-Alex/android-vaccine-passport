@@ -74,17 +74,8 @@ class ScannerFragment : Fragment(), BarcodeScannedListener {
         return inflater.inflate(R.layout.fragment_scanner, container, false)
     }
 
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        view.findViewById<Button>(R.id.scanner_cancel_btn)?.setOnClickListener {
-            requireActivity().onBackPressed();
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         model.getActionBarTitle().value = getString(R.string.scanner_actionbar_title)
         model.getActionBarSubtitle().value = getString(R.string.scanner_actionbar_subtitle)
         model.gethideHeader().value = false
@@ -95,8 +86,8 @@ class ScannerFragment : Fragment(), BarcodeScannedListener {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
         cameraState = false
         cameraExecutor?.shutdown()
     }
@@ -199,7 +190,7 @@ class ScannerFragment : Fragment(), BarcodeScannedListener {
         Log.d("Barcode", "Read successfully")
 
         val dataObject = SerializableVPass(dateAdministered, vaccineType.id, doctorName, dosageNumber.toShort(), name, passportNumber, passportExpiry, dateOfBirth, country)
-        requireActivity().intent.putExtra("just_scanned", dataObject)
+        model.barcodeToDisplay.value = dataObject
 
         model.getShowingBarcodeInScannedBarcodeFragment().value = false
         requireActivity().supportFragmentManager.beginTransaction()

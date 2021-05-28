@@ -37,9 +37,9 @@ class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
                               savedInstanceState: Bundle?): View {
         val view  = inflater.inflate(R.layout.main_fragment, container, false)
         val adapter = VPassAdapter(listOf(), this)
-        viewModel.Vpasses.observe(viewLifecycleOwner, { newPasses ->
+        viewModel.Vpasses.observe(viewLifecycleOwner) { newPasses ->
             adapter.setData(newPasses)
-        })
+        }
         val recycler : RecyclerView = view.findViewById<RecyclerView>(R.id.recycler)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.adapter = adapter
@@ -48,7 +48,7 @@ class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
 
     override fun onStart() {
         super.onStart()
-        model.getActionBarTitle().value = getString(R.string.app_name)
+        model.getActionBarTitle().value = getString(R.string.showing_vaccine_passports)
         model.getActionBarSubtitle().value = ""
         model.gethideHeader().value = false
     }
@@ -56,7 +56,7 @@ class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
     override fun onVPassClick(position: Int) {
         Log.i("CLICK", "Displaying Data for " + viewModel.Vpasses.value!![position].name)
         val dataObject = getSerialisedVPass(viewModel.Vpasses.value!![position])
-        requireActivity().intent.putExtra("vaccineData", dataObject)
+        model.barcodeToDisplay.value = dataObject
         model.getShowingBarcodeInScannedBarcodeFragment().value = true
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.container,

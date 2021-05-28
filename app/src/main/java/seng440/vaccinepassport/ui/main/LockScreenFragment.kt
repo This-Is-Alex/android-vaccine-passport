@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.preference.PreferenceManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import seng440.vaccinepassport.R
 import seng440.vaccinepassport.listeners.BiometricAuthListener
 
@@ -40,6 +41,7 @@ class LockScreenFragment : Fragment(), BiometricAuthListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        model.showBottomNavBar.value = false
         pinDisplay = view.findViewById(R.id.pinDisplay)
         pinErrorText = view.findViewById(R.id.pinErrorText)
         bioButton = view.findViewById(R.id.lockButtonFinger)
@@ -95,13 +97,7 @@ class LockScreenFragment : Fragment(), BiometricAuthListener {
 
         view.findViewById<Button>(R.id.lockButtonConfirm)?.setOnClickListener {
             if (typedPass == pin) {
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.container,
-                        MainFragment()
-                    )
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .addToBackStack("main")
-                    .commit()
+                success()
             } else {
                 typedPass = ""
                 pinDisplay.text = ""
@@ -224,13 +220,19 @@ class LockScreenFragment : Fragment(), BiometricAuthListener {
     }
 
     override fun onBiometricAuthenticationSuccess(result: BiometricPrompt.AuthenticationResult) {
+        success()
+    }
+
+    private fun success() {
+        model.showBottomNavBar.value = true
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.container,
-                MainFragment()
-            )
-            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .replace(R.id.container, MainFragment.newInstance())
             .addToBackStack("main")
             .commit()
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        if (sharedPreferences.getBoolean("border_mode", false)) {
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scannow
+        }
     }
 
     override fun onBiometricAuthenticationError(errorCode: Int, errorMessage: String) {
