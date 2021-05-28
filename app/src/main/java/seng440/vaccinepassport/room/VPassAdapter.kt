@@ -1,17 +1,21 @@
 package seng440.vaccinepassport.room
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import seng440.vaccinepassport.MainActivity
 import seng440.vaccinepassport.R
 import seng440.vaccinepassport.VaccineType
 import java.text.SimpleDateFormat
 
-class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassListener: OnVPassListener)
+class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassListener: OnVPassListener, private val context: Context)
     : RecyclerView.Adapter<VPassAdapter.VPassViewHolder>() {
 
     private val dateFormatter = SimpleDateFormat("dd-MMM-yyyy")
@@ -25,6 +29,10 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
         internal val vaccineDate : TextView
         internal val country : TextView
         internal val name : TextView
+        internal val approvalTxt : TextView
+        internal val approvalTitle : TextView
+        private val itemCard : MaterialCardView
+        internal val trashButton: ImageButton
 
 
         init {
@@ -34,6 +42,13 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
             vaccineDate = itemView.findViewById(R.id.txt_vaccine_date)
             country = itemView.findViewById(R.id.txt_country)
             name = itemView.findViewById(R.id.txt_person_name)
+            approvalTxt = itemView.findViewById(R.id.txt_approval_status)
+            approvalTitle = itemView.findViewById(R.id.lbl_approval_status)
+
+            itemCard = itemView.findViewById(R.id.vpass_item_card)
+            trashButton = itemView.findViewById(R.id.trash_btn)
+
+            itemCard.setOnClickListener { onClick(itemView) }
             itemView.setOnClickListener(this)
         }
 
@@ -63,6 +78,19 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
         viewHolder.vaccineDate.text = dateFormatter.format(MainActivity.timestampToDate(rawData.date))
         viewHolder.country.text = rawData.country
         viewHolder.name.text = rawData.name
+
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val isBorderMode: Boolean = sharedPreferences.getBoolean("border_mode", false)
+        val isLogging: Boolean = sharedPreferences.getBoolean("logging_mode", false) && isBorderMode
+
+
+        viewHolder.approvalTxt.visibility = if (isLogging) View.VISIBLE else View.GONE
+        viewHolder.approvalTitle.visibility = if (isLogging) View.VISIBLE else View.GONE
+        viewHolder.approvalTxt.text = if (rawData.approved) context.getString(R.string.vpass_approved) else context.getString(R.string.vpass_rejected)
+
+        viewHolder.trashButton.setOnClickListener {
+            onVPassListener.onVPassDelete(vPasses[position])
+        }
     }
 
     override fun getItemCount() = vPasses.size
