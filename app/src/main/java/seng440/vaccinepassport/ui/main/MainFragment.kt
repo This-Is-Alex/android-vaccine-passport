@@ -69,10 +69,10 @@ class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
         builder.setPositiveButton(getString(R.string.delete)) { _, _ ->
             Log.e("TAG", "delete: ${vpass}")
             viewModel.deleteVPass(vpass)
-            Toast.makeText(activity, "Vaccine deleted", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, getString(R.string.vaccine_deleted), Toast.LENGTH_SHORT).show()
         }
         builder.setNegativeButton(android.R.string.cancel) { _, _ ->
-            Toast.makeText(context, "Deletion canceled", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.deletion_canceled), Toast.LENGTH_SHORT).show()
         }
         builder.setMessage(getString(R.string.confirm_delete_msg))
         builder.show()

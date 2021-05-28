@@ -55,6 +55,9 @@
     <string name="vpass_approved">Approved</string>
     <string name="vpass_rejected">Rejected</string>
 
+    <string name="vaccine_deleted">Vaccine deleted</string>
+    <string name="deletion_canceled">Deletion canceled</string>
+
     <string name="nfc_nonexistent">NFC Unsupported on this device</string>
     <string name="nfc_disabled">NFC is disabled in your device settings</string>
     <string name="nfc_ready">Touch phone against ePassport to validate</string>
