@@ -21,13 +21,9 @@ class ReminderService : IntentService("ReminderService") {
 
     @SuppressLint("NewApi")
     private fun createChannel() {
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
             // Create the NotificationChannel, but only on API 26+ because
             // the NotificationChannel class is new and not in the support library
-
             val context = this.applicationContext
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -41,13 +37,12 @@ class ReminderService : IntentService("ReminderService") {
             notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             notificationManager.createNotificationChannel(notificationChannel)
         }
-
     }
 
     companion object {
 
-        const val CHANNEL_ID = "samples.notification.devdeeds.com.CHANNEL_ID"
-        const val CHANNEL_NAME = "Sample Notification"
+        const val CHANNEL_ID = "CHANNEL_ID"
+        const val CHANNEL_NAME = "Vaccine Due"
     }
 
 
@@ -73,8 +68,8 @@ class ReminderService : IntentService("ReminderService") {
             var notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val notifyIntent = Intent(this, MainActivity::class.java)
 
-            val title = "Sample Notification"
-            val message = "You have received a sample notification. This notification will take you to the details page."
+            val title = context.getString(R.string.reminder_name)
+            val message = context.getString(R.string.reminder_message)
 
             notifyIntent.putExtra("title", title)
             notifyIntent.putExtra("message", message)
@@ -117,13 +112,9 @@ class ReminderService : IntentService("ReminderService") {
                                 .bigText(message))
                         .setSound(uri)
                         .setContentText(message).build()
-
             }
 
-
-
             notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            // mNotificationId is a unique int for each notification that you must define
             notificationManager.notify(mNotificationId, mNotification)
         }
 

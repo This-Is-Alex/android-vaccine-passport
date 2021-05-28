@@ -27,7 +27,6 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private val mNotificationTime = Calendar.getInstance().timeInMillis + 5000 //Set after 5 seconds from the current time.
-    private var mNotified = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,9 +99,7 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-        if (!mNotified) {
-            ReminderUtils().setNotification(mNotificationTime, this@MainActivity)
-        }
+        ReminderUtils().setReminder(mNotificationTime, this@MainActivity)
     }
 
     override fun onNewIntent(intent: Intent) {
