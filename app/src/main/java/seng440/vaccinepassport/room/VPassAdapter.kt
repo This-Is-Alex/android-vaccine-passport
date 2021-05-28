@@ -49,7 +49,12 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
     override fun onBindViewHolder(viewHolder: VPassViewHolder, position: Int) {
         val rawData = vPasses[position]
         val vaccine = rawData.vacId
-        viewHolder.vaccIdDisplay.text = VaccineType.fromId(vaccine).toString()
+        val vaccineTypeData = VaccineType.fromId(vaccine)
+        if (vaccineTypeData != null) {
+            viewHolder.vaccIdDisplay.text = vaccineTypeData.fullName
+        } else {
+            viewHolder.vaccIdDisplay.text = vaccineTypeData.toString()
+        }
         viewHolder.drsName.text = rawData.drAdministered
         viewHolder.dosageNum.text = rawData.dosageNum.toString()
         viewHolder.vaccineDate.text = dateFormatter.format(rawData.date)
