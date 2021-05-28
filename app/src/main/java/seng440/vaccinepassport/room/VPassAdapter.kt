@@ -1,10 +1,12 @@
 package seng440.vaccinepassport.room
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import seng440.vaccinepassport.MainActivity
 import seng440.vaccinepassport.R
 import seng440.vaccinepassport.VaccineType
 import java.text.SimpleDateFormat
@@ -57,7 +59,8 @@ class VPassAdapter(private var vPasses: List<VPassData>, private val onVPassList
         }
         viewHolder.drsName.text = rawData.drAdministered
         viewHolder.dosageNum.text = rawData.dosageNum.toString()
-        viewHolder.vaccineDate.text = dateFormatter.format(rawData.date)
+        Log.d("Data", "Date : " + rawData.date.toString())
+        viewHolder.vaccineDate.text = dateFormatter.format(MainActivity.timestampToDate(rawData.date))
         viewHolder.country.text = rawData.country
         viewHolder.name.text = rawData.name
     }

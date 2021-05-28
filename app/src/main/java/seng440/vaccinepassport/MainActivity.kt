@@ -122,6 +122,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         fun timestampToDate(timestamp: Int): Date {
+            Log.d("DATE", timestamp.toString())
             return Date(timestamp.toLong() * 86400L * 1000L)
         }
     }
