@@ -100,7 +100,7 @@ class LockScreenFragment : Fragment(), BiometricAuthListener {
                         MainFragment()
                     )
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .addToBackStack("lock_screen")
+                    .addToBackStack("main")
                     .commit()
             } else {
                 typedPass = ""
@@ -229,7 +229,7 @@ class LockScreenFragment : Fragment(), BiometricAuthListener {
                 MainFragment()
             )
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-            .addToBackStack("lock_screen")
+            .addToBackStack("main")
             .commit()
     }
 
