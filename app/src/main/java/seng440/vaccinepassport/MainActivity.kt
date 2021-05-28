@@ -20,10 +20,14 @@ import seng440.vaccinepassport.ui.main.ScannerFragment
 import seng440.vaccinepassport.ui.main.SettingsFragment
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import seng440.vaccinepassport.reminders.ReminderUtils
 import seng440.vaccinepassport.ui.main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
+
+    private val mNotificationTime = Calendar.getInstance().timeInMillis + 5000 //Set after 5 seconds from the current time.
+    private var mNotified = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +99,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> false
             }
+        }
+        if (!mNotified) {
+            ReminderUtils().setNotification(mNotificationTime, this@MainActivity)
         }
     }
 

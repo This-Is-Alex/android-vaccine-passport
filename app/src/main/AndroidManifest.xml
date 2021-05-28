@@ -20,6 +20,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".reminders.ReminderReceiver"
+            android:enabled="true" />
+
+        <service
+            android:name=".reminders.ReminderService"
+            android:enabled="true" />
     </application>
 
 </manifest>
