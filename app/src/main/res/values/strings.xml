@@ -32,6 +32,7 @@
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="discard">Discard</string>
+    <string name="close">Close</string>
     <string name="approve">Approve</string>
     <string name="reject">Reject</string>
 
