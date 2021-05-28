@@ -1,9 +1,12 @@
 package seng440.vaccinepassport.ui.main
 
+import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Bitmap
+import android.net.Uri
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
@@ -16,7 +19,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.core.graphics.drawable.toDrawable
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -142,7 +146,7 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
 
         buttonMenuView.findViewById<Button>(R.id.save_barcode_btn).setOnClickListener(View.OnClickListener {
             savePassportData()
-
+            Log.d("SAVE", "Passport Data Saved")
             Toast.makeText(context, "Vaccine passport saved", Toast.LENGTH_SHORT).show()
             goBack()
         })
@@ -153,6 +157,7 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
 
         return buttonMenuView
     }
+
 
     private fun setupDiscardView(inflater: LayoutInflater): View {
         val buttonMenuView = inflater.inflate(R.layout.layout_barcode_discard, null, false)

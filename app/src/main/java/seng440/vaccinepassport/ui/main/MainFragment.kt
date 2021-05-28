@@ -1,5 +1,12 @@
 package seng440.vaccinepassport.ui.main
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,18 +14,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import seng440.vaccinepassport.MainActivity
-import seng440.vaccinepassport.R
-import seng440.vaccinepassport.SerializableVPass
-import seng440.vaccinepassport.VaccineType
+import seng440.vaccinepassport.*
+import seng440.vaccinepassport.receivers.BootReceiver
 import seng440.vaccinepassport.room.*
-import java.io.ByteArrayInputStream
-import java.io.DataInputStream
 
 class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
 
@@ -32,17 +37,26 @@ class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
 
     private val model: MainViewModel by activityViewModels()
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         val view  = inflater.inflate(R.layout.main_fragment, container, false)
         val adapter = VPassAdapter(listOf(), this)
-        viewModel.Vpasses.observe(viewLifecycleOwner, { newPasses ->
+        viewModel.Vpasses.observe(viewLifecycleOwner) { newPasses ->
             adapter.setData(newPasses)
-        })
+        }
         val recycler : RecyclerView = view.findViewById<RecyclerView>(R.id.recycler)
         recycler.layoutManager = LinearLayoutManager(view.context)
         recycler.adapter = adapter
+        createNotificationChannel()
+        Utilities.scheduleReminder(this.requireContext(), 11, 50)
+
+        val receiver = ComponentName(this.requireContext(), BootReceiver::class.java)
+        this.requireContext().packageManager.setComponentEnabledSetting(
+            receiver,
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            PackageManager.DONT_KILL_APP
+        )
         return view
     }
 
@@ -90,5 +104,15 @@ class MainFragment : Fragment(), VPassAdapter.OnVPassListener {
         val name = vpass.name
         val doctorName = vpass.drAdministered
         return SerializableVPass(dateAdministered, vaccineType, doctorName, dosageNumber, name, passportNumber, passportExpiry, dateOfBirth, country)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createNotificationChannel() {
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(Notification.CATEGORY_REMINDER, "Daily Reminders", importance).apply {
+            description = "Send daily reminders to capture memories"
+        }
+        val notificationManager: NotificationManager = getSystemService(this.requireContext(), NotificationManager::class.java) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 }
