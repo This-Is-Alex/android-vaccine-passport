@@ -27,39 +27,54 @@
 
             <Button
                 android:id="@+id/lockButton1"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="6dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="16dp"
+                android:backgroundTint="@android:color/transparent"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/lock_button_1"
-                android:textSize="30sp" />
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                app:iconPadding="0dp"
+                app:iconTint="@color/white" />
 
             <Button
                 android:id="@+id/lockButton2"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="6dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="16dp"
+                android:backgroundTint="@android:color/transparent"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/lock_button_2"
-                android:textSize="30sp" />
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                app:iconPadding="0dp"
+                app:iconTint="@color/white" />
 
             <Button
                 android:id="@+id/lockButton3"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="6dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="16dp"
+                android:backgroundTint="@android:color/transparent"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/lock_button_3"
-                android:textSize="30sp" />
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                app:iconPadding="0dp"
+                app:iconTint="@color/white" />
 
         </LinearLayout>
 
@@ -71,39 +86,54 @@
 
             <Button
                 android:id="@+id/lockButton4"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="6dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
+                android:backgroundTint="@android:color/transparent"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/lock_button_4"
-                android:textSize="30sp" />
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                app:iconPadding="0dp"
+                app:iconTint="@color/white" />
 
             <Button
                 android:id="@+id/lockButton5"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="6dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
+                android:backgroundTint="@android:color/transparent"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/lock_button_5"
-                android:textSize="30sp" />
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                app:iconPadding="0dp"
+                app:iconTint="@color/white" />
 
             <Button
                 android:id="@+id/lockButton6"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="6dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
+                android:backgroundTint="@android:color/transparent"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/lock_button_6"
-                android:textSize="30sp" />
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                app:iconPadding="0dp"
+                app:iconTint="@color/white" />
         </LinearLayout>
 
         <LinearLayout
@@ -114,38 +144,53 @@
 
             <Button
                 android:id="@+id/lockButton7"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="6dp"
                 android:layout_marginTop="16dp"
+                android:backgroundTint="@android:color/transparent"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/lock_button_7"
-                android:textSize="30sp" />
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                app:iconPadding="0dp"
+                app:iconTint="@color/white" />
 
             <Button
                 android:id="@+id/lockButton8"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="6dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
+                android:backgroundTint="@android:color/transparent"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/lock_button_8"
-                android:textSize="30sp" />
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                app:iconPadding="0dp"
+                app:iconTint="@color/white" />
 
             <Button
                 android:id="@+id/lockButton9"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="6dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
+                android:backgroundTint="@android:color/transparent"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/lock_button_9"
-                android:textSize="30sp" />
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                app:iconPadding="0dp"
+                app:iconTint="@color/white" />
 
         </LinearLayout>
 
@@ -157,45 +202,63 @@
 
             <Button
                 android:id="@+id/lockButtonFinger"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="6dp"
+                android:backgroundTint="@android:color/transparent"
                 android:gravity="center_horizontal|center_vertical"
+                android:textColor="@color/white"
                 app:icon="@drawable/icon_fingerprint"
                 app:iconGravity="textTop"
-                app:iconPadding="0dp" />
+                app:iconPadding="0dp"
+                app:iconTint="@color/white" />
 
             <Button
                 android:id="@+id/lockButton0"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="6dp"
+                android:backgroundTint="@android:color/transparent"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/lock_button_0"
-                android:textSize="30sp" />
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                app:iconPadding="0dp"
+                app:iconTint="@color/white" />
 
             <Button
                 android:id="@+id/lockButtonDelete"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="6dp"
+                android:backgroundTint="@android:color/transparent"
                 android:gravity="center_horizontal|center_vertical"
+                android:textColor="@color/white"
                 app:icon="@drawable/icon_backspace"
                 app:iconGravity="textTop"
-                app:iconPadding="0dp" />
+                app:iconPadding="0dp"
+                app:iconTint="@color/white" />
 
         </LinearLayout>
 
         <Button
             android:id="@+id/lockButtonConfirm"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="264dp"
             android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
+            android:backgroundTint="@android:color/transparent"
             android:text="@string/lock_button_confirm"
+            android:textColor="@color/white"
             android:textSize="20sp"
+            app:iconPadding="0dp"
+            app:iconTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -207,7 +270,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:gravity="center_horizontal"
             android:textColor="#FF0000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

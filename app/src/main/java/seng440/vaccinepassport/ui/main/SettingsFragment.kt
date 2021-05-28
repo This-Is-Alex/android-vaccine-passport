@@ -1,11 +1,14 @@
 package seng440.vaccinepassport.ui.main
 
 import android.content.SharedPreferences.Editor
+import android.graphics.drawable.VectorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.preference.*
 import seng440.vaccinepassport.R
@@ -43,10 +46,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
             var pinDisplay: TextView = pin_entry.findViewById(R.id.pinDisplay)
             pinDisplay.text = sharedPreferences.getString("pin", "")
 
-            var confirmButton: Button = pin_entry.findViewById(R.id.lockButtonConfirm)
-            confirmButton.visibility = View.GONE
-            var bioButton: Button = pin_entry.findViewById(R.id.lockButtonFinger)
-            bioButton.visibility = View.GONE
+            var bioButton = pin_entry.findViewById<Button>(R.id.lockButtonFinger)
+            bioButton.visibility = View.INVISIBLE
 
             pin_entry.findViewById<Button>(R.id.lockButton1)?.setOnClickListener {
                 numPress("1", pinDisplay)
@@ -83,13 +84,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 numPress("delete", pinDisplay)
             }
 
-            builder.setPositiveButton("Confirm Pin") { _, _ ->
+            val dialog = builder.show()
+
+            val confirmButton = pin_entry.findViewById<Button>(R.id.lockButtonConfirm)
+            confirmButton.setOnClickListener {
                 val editor: Editor = sharedPreferences.edit()
                 editor.putString("pin", pinDisplay.text.toString())
                 preferenceScreen.findPreference<SwitchPreference>("use_pin")?.isEnabled = true
                 editor.commit()
+                dialog.dismiss()
             }
-            builder.show()
 
             true
         }
