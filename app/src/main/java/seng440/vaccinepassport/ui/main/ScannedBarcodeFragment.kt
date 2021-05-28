@@ -88,10 +88,11 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
         } else {
             val barcodeView = inflater.inflate(R.layout.layout_barcode_display, null, false)
             val imageView = barcodeView.findViewById<ImageView>(R.id.vpass_barcode)
-            val image = generateBarcode(Resources.getSystem().displayMetrics.widthPixels)
+            val size = Resources.getSystem().displayMetrics.widthPixels
+            val image = generateBarcode(size)
             imageView.setImageBitmap(image)
 
-
+            view.findViewById<CardView>(R.id.vpass_top_card).layoutParams.height = size
             view.findViewById<CardView>(R.id.vpass_top_card).addView(barcodeView)
         }
 
