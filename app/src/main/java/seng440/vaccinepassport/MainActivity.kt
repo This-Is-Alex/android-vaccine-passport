@@ -116,17 +116,19 @@ class MainActivity : AppCompatActivity() {
         viewModel.Vpasses.observe(this) { newPasses ->
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
             val isBorderMode: Boolean = sharedPreferences.getBoolean("border_mode", false)
-            if (!isBorderMode) {
+            if (!isBorderMode && newPasses.isNotEmpty()) {
                 Log.d("REMINDERS", "New reminders size" + newPasses.size.toString())
-                for (pass in newPasses) {
-                    val passVaccineType = VaccineType.fromId(pass.vacId)
-                    if (passVaccineType != null) {
-                        Log.d("REMINDERS", "Number of doses" + passVaccineType.numDoses.toString())
-                        Log.d("REMINDERS", "Dose number" + pass.dosageNum)
-                        if (pass.dosageNum < passVaccineType.numDoses)
-                            Log.d("REMINDERS", "Add a new reminder")
-                    }
+                // Only interested in last pass in list, as can only upload one vaccine code at a time
+                val pass = newPasses[newPasses.lastIndex]
+                Log.d("REMINDERS", "Last scanned " + pass.toString())
+                val passVaccineType = VaccineType.fromId(pass.vacId)
+                if (passVaccineType != null) {
+                    Log.d("REMINDERS", "Number of doses" + passVaccineType.numDoses.toString())
+                    Log.d("REMINDERS", "Dose number" + pass.dosageNum)
+                    if (pass.dosageNum < passVaccineType.numDoses) {
+                        Log.d("REMINDERS", "Add a new reminder")
                         ReminderUtils().setReminder(Calendar.getInstance().timeInMillis, this@MainActivity)
+                    }
                 }
             }
         }
