@@ -16,10 +16,6 @@ class VPassViewModel(private val vPassRepository: VPassRepository): ViewModel() 
     fun deleteVPass(VPass: VPassData) = viewModelScope.launch {
         vPassRepository.delete(VPass)
     }
-//
-//    fun getAllVPasses() : List<VPassData> = viewModelScope.launch {
-//        return vPassRepository.getAll()
-//    }
 }
 
 class VPassViewModelFactory(private val repository: VPassRepository) : ViewModelProvider.Factory {

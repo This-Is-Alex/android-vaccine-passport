@@ -10,16 +10,12 @@ class ReminderUtils {
 
     fun setReminder(timeInMilliSeconds: Long, activity: Activity) {
         if (timeInMilliSeconds > 0) {
-
             val alarmManager = activity.getSystemService(Activity.ALARM_SERVICE) as AlarmManager
             val alarmIntent = Intent(activity.applicationContext, ReminderReceiver::class.java)
-
             alarmIntent.putExtra("reason", "notification")
             alarmIntent.putExtra("timestamp", timeInMilliSeconds)
-
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = timeInMilliSeconds
-
             val pendingIntent = PendingIntent.getBroadcast(activity, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT)
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
         }

@@ -36,7 +36,7 @@ class VPassData (
 //        return uri.toString()
 //    }
 //
-//    @TypeConverter
+//    @TypeConverter`
 //    fun fromStringUri(string: String?): Uri? {
 //        return Uri.parse(string)
 //    }

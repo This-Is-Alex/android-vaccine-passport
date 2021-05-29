@@ -2,13 +2,15 @@ package seng440.vaccinepassport.ui.main
 
 import android.app.Activity
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import seng440.vaccinepassport.R
 import seng440.vaccinepassport.SerializableVPass
+import seng440.vaccinepassport.room.VPassData
 
 class MainViewModel : ViewModel() {
-
     private val actionBarTitle: MutableLiveData<String> = MutableLiveData("")
     private val actionBarSubtitle: MutableLiveData<String> = MutableLiveData("")
     private val hideHeader: MutableLiveData<Boolean> = MutableLiveData(false)

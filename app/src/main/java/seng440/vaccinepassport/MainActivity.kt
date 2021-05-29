@@ -12,8 +12,11 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import seng440.vaccinepassport.passportreader.NFCListenerCallback
 import seng440.vaccinepassport.ui.main.MainFragment
 import seng440.vaccinepassport.ui.main.MainViewModel
@@ -22,13 +25,19 @@ import seng440.vaccinepassport.ui.main.SettingsFragment
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import seng440.vaccinepassport.reminders.ReminderUtils
+import seng440.vaccinepassport.room.*
 import seng440.vaccinepassport.ui.main.*
 import java.util.*
+import java.util.Collections.list
 
 class MainActivity : AppCompatActivity() {
     private val model: MainViewModel by viewModels()
 
-    private val mNotificationTime = Calendar.getInstance().timeInMillis + 5000 //Set after 5 seconds from the current time.
+    private val viewModel: VPassViewModel by viewModels() {
+        VPassViewModelFactory((this.application as VPassLiveRoomApplication).repository)
+    }
+    private val reminderTimes : MutableList<Long> = ArrayList()
+//    private val mNotificationTime = Calendar.getInstance().timeInMillis + 5000 //Set after 5 seconds from the current time.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +109,21 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-        ReminderUtils().setReminder(mNotificationTime, this@MainActivity)
+        reminders()
+    }
+
+    fun reminders() {
+        viewModel.Vpasses.observe(this) { newPasses ->
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+            val isBorderMode: Boolean = sharedPreferences.getBoolean("border_mode", false)
+            if (!isBorderMode) {
+                Log.d("REMINDERS", "New reminders size" + newPasses.size.toString())
+                for (pass in newPasses) {
+                    Log.d("REMINDERS", "Add a new reminder")
+                    ReminderUtils().setReminder(Calendar.getInstance().timeInMillis, this@MainActivity)
+                }
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
