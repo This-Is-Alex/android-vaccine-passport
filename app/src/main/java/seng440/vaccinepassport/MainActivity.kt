@@ -128,12 +128,17 @@ class MainActivity : AppCompatActivity() {
                     Log.d("REMINDERS", "Number of doses" + passVaccineType.numDoses.toString())
                     Log.d("REMINDERS", "Dose number" + pass.dosageNum)
                     if (pass.dosageNum < passVaccineType.numDoses) {
+                        // Not sure if these date calculations are correct
                         Log.d("REMINDERS", "Add a new reminder")
                         val vaccineDate = timestampToDate(pass.date + passVaccineType.daysBetweenDoses!!)
                         Log.d("REMINDERS", "Vaccine Date " + vaccineDate)
                         val calendar = Calendar.getInstance()
                         calendar.set(vaccineDate.getYear(), vaccineDate.getMonth(), vaccineDate.getDay(),
-                                vaccineDate.hours, vaccineDate.minutes, 0)
+                                2, 35, 0)
+                        Log.d("REMINDERS", "Calendar date" + calendar.time)
+                        // Previous working command
+                        //ReminderUtils().setReminder(Calendar.getInstance().timeInMillis + 5000, this@MainActivity)
+                        // Not certain if this command is working
                         ReminderUtils().setReminder(calendar.timeInMillis, this@MainActivity)
                         Log.d("REMINDERS", "Reminder set")
                     }

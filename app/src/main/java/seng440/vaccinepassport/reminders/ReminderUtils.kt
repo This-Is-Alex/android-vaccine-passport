@@ -17,6 +17,7 @@ class ReminderUtils {
             alarmIntent.putExtra("reason", "notification")
             alarmIntent.putExtra("timestamp", timeInMilliSeconds)
             val calendar = Calendar.getInstance()
+            Log.d("REMINDERS", calendar.time.toString())
             calendar.timeInMillis = timeInMilliSeconds
             val pendingIntent = PendingIntent.getBroadcast(activity, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT)
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
