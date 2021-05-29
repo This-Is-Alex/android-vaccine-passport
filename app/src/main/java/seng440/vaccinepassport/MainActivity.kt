@@ -119,8 +119,14 @@ class MainActivity : AppCompatActivity() {
             if (!isBorderMode) {
                 Log.d("REMINDERS", "New reminders size" + newPasses.size.toString())
                 for (pass in newPasses) {
-                    Log.d("REMINDERS", "Add a new reminder")
-                    ReminderUtils().setReminder(Calendar.getInstance().timeInMillis, this@MainActivity)
+                    val passVaccineType = VaccineType.fromId(pass.vacId)
+                    if (passVaccineType != null) {
+                        Log.d("REMINDERS", "Number of doses" + passVaccineType.numDoses.toString())
+                        Log.d("REMINDERS", "Dose number" + pass.dosageNum)
+                        if (pass.dosageNum < passVaccineType.numDoses)
+                            Log.d("REMINDERS", "Add a new reminder")
+                    }
+                        ReminderUtils().setReminder(Calendar.getInstance().timeInMillis, this@MainActivity)
                 }
             }
         }
