@@ -27,6 +27,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import seng440.vaccinepassport.reminders.ReminderUtils
 import seng440.vaccinepassport.room.*
 import seng440.vaccinepassport.ui.main.*
+import java.time.Instant.now
+import java.time.LocalDate
 import java.util.*
 import java.util.Collections.list
 
@@ -127,7 +129,13 @@ class MainActivity : AppCompatActivity() {
                     Log.d("REMINDERS", "Dose number" + pass.dosageNum)
                     if (pass.dosageNum < passVaccineType.numDoses) {
                         Log.d("REMINDERS", "Add a new reminder")
-                        ReminderUtils().setReminder(Calendar.getInstance().timeInMillis, this@MainActivity)
+                        val vaccineDate = timestampToDate(pass.date + passVaccineType.daysBetweenDoses!!)
+                        Log.d("REMINDERS", "Vaccine Date " + vaccineDate)
+                        val calendar = Calendar.getInstance()
+                        calendar.set(vaccineDate.getYear(), vaccineDate.getMonth(), vaccineDate.getDay(),
+                                vaccineDate.hours, vaccineDate.minutes, 0)
+                        ReminderUtils().setReminder(calendar.timeInMillis, this@MainActivity)
+                        Log.d("REMINDERS", "Reminder set")
                     }
                 }
             }
