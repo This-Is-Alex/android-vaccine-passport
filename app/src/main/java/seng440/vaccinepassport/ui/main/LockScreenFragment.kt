@@ -132,7 +132,7 @@ class LockScreenFragment : Fragment(), BiometricAuthListener {
 
         bioButton.visibility =
             if (isBiometricReady(requireContext()) && use_bio) View.VISIBLE
-            else View.GONE
+            else View.INVISIBLE
     }
 
     fun hasBiometricCapability(context: Context): Int {

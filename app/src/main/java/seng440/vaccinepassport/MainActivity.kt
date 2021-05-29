@@ -1,6 +1,7 @@
 package seng440.vaccinepassport
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
@@ -25,15 +26,15 @@ import seng440.vaccinepassport.ui.main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
+    private val model: MainViewModel by viewModels()
 
     private val mNotificationTime = Calendar.getInstance().timeInMillis + 5000 //Set after 5 seconds from the current time.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
-
+        val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         if (savedInstanceState == null) {
-            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
             var requirePin: Boolean = sharedPreferences.getBoolean("use_pin", false)
 
             if (requirePin) {
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        val model: MainViewModel by viewModels()
+
         model.getActionBarTitle().observe(this, Observer<String>{ title ->
             supportActionBar?.title = title
         })
@@ -119,8 +120,15 @@ class MainActivity : AppCompatActivity() {
         val currentFrag = supportFragmentManager.findFragmentById(R.id.container)
         if (currentFrag is MainFragment || currentFrag is LockScreenFragment) {
             finish()
+        } else if (currentFrag is ScannedBarcodeFragment){
+            val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+            if (model.getShowingBarcodeInScannedBarcodeFragment().value == true || !sharedPreferences.getBoolean("border_mode", false)) {
+                findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_passports
+            } else {
+                findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scannow
+            }
         } else {
-            super.onBackPressed()
+            findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_passports
         }
     }
 
