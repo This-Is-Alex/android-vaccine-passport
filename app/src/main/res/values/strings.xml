@@ -81,7 +81,7 @@
     <string name="lock_button_0">0</string>
     <string name="lock_button_finger">biometric unlock</string>
     <string name="lock_button_delete">delete</string>
-    <string name="lock_button_confirm">Confirm Pin</string>
+    <string name="lock_button_confirm">Confirm</string>
     <string name="bad_pin_msg">Incorrect Pin</string>
 
     <string name="reminder_channel_description">Send Vaccine Reminder</string>
