@@ -12,6 +12,7 @@ import java.util.*
 import android.app.NotificationChannel
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.preference.PreferenceManager
 import seng440.vaccinepassport.MainActivity
 import seng440.vaccinepassport.R
 
@@ -46,7 +47,12 @@ class ReminderService : IntentService("ReminderService") {
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onHandleIntent(intent: Intent?) {
-
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val notifications: Boolean = sharedPreferences.getBoolean("notifications", true)
+        Log.d("NOTIFICATIONS", "Allow notifications set to " + notifications)
+        if (!notifications) {
+            return
+        }
         Log.d("REMINDERS", "Handling Intent")
         createChannel()
 

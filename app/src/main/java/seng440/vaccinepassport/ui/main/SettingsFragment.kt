@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.Switch
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -25,10 +26,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val hasPin: Boolean = sharedPreferences.getString("pin", "none") != "none"
         var requirePin: Boolean = sharedPreferences.getBoolean("use_pin", false)
         val isBorderMode: Boolean = sharedPreferences.getBoolean("border_mode", false)
-        val allowNotifications: Boolean = sharedPreferences.getBoolean("notifications", true)
 
         preferenceScreen.findPreference<SwitchPreference>("logging_mode")?.isEnabled = isBorderMode
         preferenceScreen.findPreference<SwitchPreference>("use_pin")?.isEnabled = hasPin
+//        preferenceScreen.findPreference<SwitchPreference>("notifications")?.isEnabled = !isBorderMode
 
         preferenceScreen.findPreference<Preference>("use_pin")?.setOnPreferenceClickListener {
             preferenceScreen.findPreference<SwitchPreference>("use_fingerprint")?.isEnabled = sharedPreferences.getBoolean("use_pin", false)
@@ -100,7 +101,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         preferenceScreen.findPreference<Preference>("border_mode")?.setOnPreferenceClickListener {
-            preferenceScreen.findPreference<SwitchPreference>("logging_mode")?.isEnabled = sharedPreferences.getBoolean("border_mode", false)
+            val borderMode = sharedPreferences.getBoolean("border_mode", false)
+            preferenceScreen.findPreference<SwitchPreference>("logging_mode")?.isEnabled = borderMode
+//            preferenceScreen.findPreference<SwitchPreference>("notifications")?.isEnabled = !borderMode
             true
         }
 

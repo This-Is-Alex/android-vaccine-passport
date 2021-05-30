@@ -107,7 +107,7 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
             view.findViewById<CardView>(R.id.barcode_save_options).addView(setupSaveCancelView(inflater))
         } else if (isLogging) {
             view.findViewById<CardView>(R.id.barcode_save_options).addView(setupApproveRejectView(inflater))
-        } else {    // Is border mode and not logging
+        } else {    // Is border mode and not logging and not displaying old data
             view.findViewById<CardView>(R.id.barcode_save_options).addView(setupDiscardView(inflater))
         }
 

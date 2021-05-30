@@ -126,7 +126,9 @@ class MainActivity : AppCompatActivity() {
         viewModel.Vpasses.observe(this) { newPasses ->
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
             val isBorderMode: Boolean = sharedPreferences.getBoolean("border_mode", false)
-            if (!isBorderMode && newPasses.isNotEmpty()) {
+            val notifications: Boolean = sharedPreferences.getBoolean("notifications", true)
+            Log.d("NOTIFICATIONS", "Allow notifications set to " + notifications)
+            if (!isBorderMode && newPasses.isNotEmpty() && notifications) {
                 Log.d("REMINDERS", "New reminders size" + newPasses.size.toString())
                 // Only interested in last pass in list, as can only upload one vaccine code at a time
                 val pass = newPasses[newPasses.lastIndex]
