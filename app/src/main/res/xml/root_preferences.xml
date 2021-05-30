@@ -37,5 +37,13 @@
             android:title="@string/pref_logging_title"
             app:icon="@drawable/icon_logging" />
     </PreferenceCategory>
+    <PreferenceCategory app:title="@string/notifications_header">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="border_mode"
+            android:summary="@string/pref_notifications_desc"
+            android:title="@string/pref_notifications_title"
+            app:icon="@drawable/icon_notifications" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

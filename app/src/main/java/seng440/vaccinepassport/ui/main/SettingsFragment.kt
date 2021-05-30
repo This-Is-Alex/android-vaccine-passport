@@ -25,6 +25,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val hasPin: Boolean = sharedPreferences.getString("pin", "none") != "none"
         var requirePin: Boolean = sharedPreferences.getBoolean("use_pin", false)
         val isBorderMode: Boolean = sharedPreferences.getBoolean("border_mode", false)
+        val allowNotifications: Boolean = sharedPreferences.getBoolean("notifications", true)
 
         preferenceScreen.findPreference<SwitchPreference>("logging_mode")?.isEnabled = isBorderMode
         preferenceScreen.findPreference<SwitchPreference>("use_pin")?.isEnabled = hasPin
