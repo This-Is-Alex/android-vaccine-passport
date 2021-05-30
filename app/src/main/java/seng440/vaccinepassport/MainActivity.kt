@@ -141,12 +141,9 @@ class MainActivity : AppCompatActivity() {
                         val vaccineDate = timestampToDate(pass.date + passVaccineType.daysBetweenDoses!!)
                         Log.d("REMINDERS", "Vaccine Date " + vaccineDate)
                         val calendar = Calendar.getInstance()
-                        calendar.set(vaccineDate.getYear(), vaccineDate.getMonth(), vaccineDate.getDay(),
-                                2, 35, 0)
+                        calendar.set((vaccineDate.year + 1900), vaccineDate.month, vaccineDate.day,
+                                15, 57, 0)
                         Log.d("REMINDERS", "Calendar date" + calendar.time)
-                        // Previous working command
-                        //ReminderUtils().setReminder(Calendar.getInstance().timeInMillis + 5000, this@MainActivity)
-                        // Not certain if this command is working
                         ReminderUtils().setReminder(calendar.timeInMillis, this@MainActivity)
                         Log.d("REMINDERS", "Reminder set")
                     }
