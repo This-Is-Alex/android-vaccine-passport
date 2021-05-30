@@ -29,7 +29,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         preferenceScreen.findPreference<SwitchPreference>("logging_mode")?.isEnabled = isBorderMode
         preferenceScreen.findPreference<SwitchPreference>("use_pin")?.isEnabled = hasPin
-//        preferenceScreen.findPreference<SwitchPreference>("notifications")?.isEnabled = !isBorderMode
+        preferenceScreen.findPreference<SwitchPreference>("notifications")?.isEnabled = !isBorderMode
 
         preferenceScreen.findPreference<Preference>("use_pin")?.setOnPreferenceClickListener {
             preferenceScreen.findPreference<SwitchPreference>("use_fingerprint")?.isEnabled = sharedPreferences.getBoolean("use_pin", false)
@@ -103,7 +103,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceScreen.findPreference<Preference>("border_mode")?.setOnPreferenceClickListener {
             val borderMode = sharedPreferences.getBoolean("border_mode", false)
             preferenceScreen.findPreference<SwitchPreference>("logging_mode")?.isEnabled = borderMode
-//            preferenceScreen.findPreference<SwitchPreference>("notifications")?.isEnabled = !borderMode
+            preferenceScreen.findPreference<SwitchPreference>("notifications")?.isEnabled = !borderMode
             true
         }
 
