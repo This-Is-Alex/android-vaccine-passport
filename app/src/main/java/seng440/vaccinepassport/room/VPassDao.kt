@@ -15,7 +15,7 @@ interface VPassDao {
     @Delete
     suspend fun delete(vPass: VPassData)
 
-    @Query("SELECT * FROM vPass")
+    @Query("SELECT * FROM vPass ORDER BY date DESC")
     fun getAll(): Flow<List<VPassData>>
 
     @Query("SELECT COUNT(*) FROM vPass")

@@ -196,7 +196,7 @@ class ScannedBarcodeFragment : Fragment(), NFCListenerCallback, PassportReaderCa
         Log.d("Navigate", "Closing barcode to ${destination}")
 
         if (destination == "scanner") {
-            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scannow
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scan_now
         } else {
             requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_passports
         }

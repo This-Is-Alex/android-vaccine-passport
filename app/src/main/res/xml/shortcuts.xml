@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="scan"
+        android:enabled="true"
+        android:icon="@drawable/icon_scan_now"
+        android:shortcutShortLabel="@string/menu_scan_now"
+        android:shortcutDisabledMessage="@string/unable_to_scan">
+        <intent
+            android:action="android.intent.custom.scan"
+            android:targetPackage="seng440.vaccinepassport"
+            android:targetClass="seng440.vaccinepassport.MainActivity" />
+        <!-- If your shortcut is associated with multiple intents, include them
+             here. The last intent in the list determines what the user sees when
+             they launch this shortcut. -->
+        <categories android:name="android.shortcut.conversation" />
+        <capability-binding android:key="actions.intent.CREATE_MESSAGE" />
+    </shortcut>
+    <!-- Specify more shortcuts here. -->
+</shortcuts>

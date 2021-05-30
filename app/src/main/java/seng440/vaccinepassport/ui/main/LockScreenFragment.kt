@@ -225,13 +225,16 @@ class LockScreenFragment : Fragment(), BiometricAuthListener {
 
     private fun success() {
         model.showBottomNavBar.value = true
+
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.container, MainFragment.newInstance())
             .addToBackStack("main")
             .commit()
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        if (sharedPreferences.getBoolean("border_mode", false)) {
-            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scannow
+        if ("android.intent.custom.scan" == requireActivity().intent.action) {
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scan_now
+        } else if (sharedPreferences.getBoolean("border_mode", false)) {
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scan_now
         }
     }
 

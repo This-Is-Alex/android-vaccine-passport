@@ -42,11 +42,12 @@ class MainActivity : AppCompatActivity() {
 //    private val mNotificationTime = Calendar.getInstance().timeInMillis + 5000 //Set after 5 seconds from the current time.
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.e("TAG", "Launching with: ${intent.action} and ${"android.intent.custom.scan" == intent.action}")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
         val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         if (savedInstanceState == null) {
-            var requirePin: Boolean = sharedPreferences.getBoolean("use_pin", false)
+            val requirePin: Boolean = sharedPreferences.getBoolean("use_pin", false)
 
             if (requirePin) {
                 Log.e("TAG", "requiring pin now")
@@ -55,15 +56,21 @@ class MainActivity : AppCompatActivity() {
                         .commit()
             } else {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MainFragment.newInstance())
-                    .addToBackStack("main")
-                    .commit()
-                if (sharedPreferences.getBoolean("border_mode", false)) {
-                    findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scannow
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, ScannerFragment.newInstance())
-                        .addToBackStack("scanner")
+                        .replace(R.id.container, MainFragment.newInstance())
+                        .addToBackStack("main")
                         .commit()
+                if ("android.intent.custom.scan" == intent.action) {
+                    findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scan_now
+                    supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, ScannerFragment.newInstance())
+                            .addToBackStack("scanner")
+                            .commit()
+                } else if (sharedPreferences.getBoolean("border_mode", false)) {
+                        findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scan_now
+                        supportFragmentManager.beginTransaction()
+                                .replace(R.id.container, ScannerFragment.newInstance())
+                                .addToBackStack("scanner")
+                                .commit()
                 }
             }
         }
@@ -90,7 +97,7 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.popBackStack("main", 0)
                     true
                 }
-                R.id.menu_scannow -> {
+                R.id.menu_scan_now -> {
                     if (supportFragmentManager.findFragmentByTag("scanner") != null) {
                         supportFragmentManager.popBackStack("scanner", 0)
                     } else {
@@ -169,7 +176,7 @@ class MainActivity : AppCompatActivity() {
             if (model.getShowingBarcodeInScannedBarcodeFragment().value == true || !sharedPreferences.getBoolean("border_mode", false)) {
                 findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_passports
             } else {
-                findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scannow
+                findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scan_now
             }
         } else {
             findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_passports

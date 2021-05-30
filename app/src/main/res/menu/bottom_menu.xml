@@ -6,10 +6,10 @@
         android:icon="@drawable/icon_identity"
         android:title="@string/menu_passports"/>
     <item
-        android:id="@+id/menu_scannow"
+        android:id="@+id/menu_scan_now"
         android:enabled="true"
         android:icon="@drawable/icon_scan_now"
-        android:title="@string/menu_scannow"/>
+        android:title="@string/menu_scan_now"/>
 
     <item
         android:id="@+id/menu_settings"
