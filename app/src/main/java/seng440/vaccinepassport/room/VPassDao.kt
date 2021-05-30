@@ -18,6 +18,9 @@ interface VPassDao {
     @Query("SELECT * FROM vPass ORDER BY date DESC")
     fun getAll(): Flow<List<VPassData>>
 
+    @Query("SELECT * FROM vPass ORDER BY date DESC LIMIT 1")
+    fun getLatest(): VPassData
+
     @Query("SELECT COUNT(*) FROM vPass")
     fun getCount(): Flow<Int>
 }

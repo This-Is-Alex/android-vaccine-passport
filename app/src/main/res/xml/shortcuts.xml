@@ -10,9 +10,19 @@
             android:action="android.intent.custom.scan"
             android:targetPackage="seng440.vaccinepassport"
             android:targetClass="seng440.vaccinepassport.MainActivity" />
-        <!-- If your shortcut is associated with multiple intents, include them
-             here. The last intent in the list determines what the user sees when
-             they launch this shortcut. -->
+        <categories android:name="android.shortcut.conversation" />
+        <capability-binding android:key="actions.intent.CREATE_MESSAGE" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="show_latest"
+        android:enabled="true"
+        android:icon="@drawable/icon_identity"
+        android:shortcutShortLabel="@string/shortcut_latest"
+        android:shortcutDisabledMessage="@string/no_pass_shortcut">
+        <intent
+            android:action="android.intent.custom.show_latest"
+            android:targetPackage="seng440.vaccinepassport"
+            android:targetClass="seng440.vaccinepassport.MainActivity" />
         <categories android:name="android.shortcut.conversation" />
         <capability-binding android:key="actions.intent.CREATE_MESSAGE" />
     </shortcut>

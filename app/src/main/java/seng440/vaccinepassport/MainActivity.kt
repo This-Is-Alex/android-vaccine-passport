@@ -6,16 +6,13 @@ import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import seng440.vaccinepassport.passportreader.NFCListenerCallback
 import seng440.vaccinepassport.ui.main.MainFragment
@@ -24,13 +21,13 @@ import seng440.vaccinepassport.ui.main.ScannerFragment
 import seng440.vaccinepassport.ui.main.SettingsFragment
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import seng440.vaccinepassport.reminders.ReminderUtils
 import seng440.vaccinepassport.room.*
 import seng440.vaccinepassport.ui.main.*
-import java.time.Instant.now
-import java.time.LocalDate
 import java.util.*
-import java.util.Collections.list
 
 class MainActivity : AppCompatActivity() {
     private val model: MainViewModel by viewModels()
@@ -42,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 //    private val mNotificationTime = Calendar.getInstance().timeInMillis + 5000 //Set after 5 seconds from the current time.
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.e("TAG", "Launching with: ${intent.action} and ${"android.intent.custom.scan" == intent.action}")
+        Log.e("TAG", "Launching with: ${intent.action}")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
         val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
@@ -65,6 +62,8 @@ class MainActivity : AppCompatActivity() {
                             .replace(R.id.container, ScannerFragment.newInstance())
                             .addToBackStack("scanner")
                             .commit()
+                } else if ("android.intent.custom.show_latest" == intent.action) {
+                    showLatest()
                 } else if (sharedPreferences.getBoolean("border_mode", false)) {
                         findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scan_now
                         supportFragmentManager.beginTransaction()
@@ -72,6 +71,8 @@ class MainActivity : AppCompatActivity() {
                                 .addToBackStack("scanner")
                                 .commit()
                 }
+
+
             }
         }
 
@@ -188,5 +189,54 @@ class MainActivity : AppCompatActivity() {
             Log.d("DATE", timestamp.toString())
             return Date(timestamp.toLong() * 86400L * 1000L)
         }
+    }
+
+    private fun showLatest() {
+        Log.i("CLICK", "Displaying Data for latest")
+        Log.i("CLICK", "Displaying Data for " + viewModel.Vpasses)
+
+        lifecycleScope.launch {
+            var dataObject: VPassData? = null
+            withContext(Dispatchers.IO) {
+                dataObject = try {
+                    viewModel.getLatest()
+                } catch (exception: Exception) {
+                    null
+                }
+            }
+            if (dataObject != null) {
+                val cerealObject = getSerialisedVPass(dataObject!!)
+                model.barcodeToDisplay.value = cerealObject
+                model.getShowingBarcodeInScannedBarcodeFragment().value = true
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.container,
+                                ScannedBarcodeFragment(),
+                                "show_scan_result"
+                        )
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .addToBackStack("show_scan_result")
+                        .commit()
+            } else {
+                makeToast(getString(R.string.no_pass_shortcut))
+            }
+        }
+    }
+
+    fun makeToast(string: String){
+        Toast.makeText(this, string, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun getSerialisedVPass(vpass: VPassData) : SerializableVPass {
+        Log.i("VPASS Received", vpass.name)
+        val dateAdministered = vpass.date
+        val vaccineType = vpass.vacId
+        val dosageNumber = vpass.dosageNum
+        val passportNumber = vpass.passportNum
+        val passportExpiry = vpass.passportExpDate
+        val dateOfBirth = vpass.dob
+        val country = vpass.country
+        val name = vpass.name
+        val doctorName = vpass.drAdministered
+        return SerializableVPass(dateAdministered, vaccineType, doctorName, dosageNumber, name, passportNumber, passportExpiry, dateOfBirth, country)
     }
 }

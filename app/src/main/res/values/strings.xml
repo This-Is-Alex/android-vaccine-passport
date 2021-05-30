@@ -19,7 +19,9 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_passports">Your Vaccines</string>
     <string name="menu_scan_now">Scan Barcode</string>
+    <string name="shortcut_latest">Display latest Vaccine</string>
     <string name="unable_to_scan">Scanning is not available at this time</string>
+    <string name="no_pass_shortcut">No vaccine passports to display</string>
 
     <string name="scanner_actionbar_title">Scanning</string>
     <string name="scanner_actionbar_subtitle">Looking for a barcode</string>

@@ -3,27 +3,39 @@ package seng440.vaccinepassport.ui.main
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.*
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import seng440.vaccinepassport.R
+import seng440.vaccinepassport.SerializableVPass
 import seng440.vaccinepassport.listeners.BiometricAuthListener
+import seng440.vaccinepassport.room.VPassData
+import seng440.vaccinepassport.room.VPassLiveRoomApplication
+import seng440.vaccinepassport.room.VPassViewModel
+import seng440.vaccinepassport.room.VPassViewModelFactory
 
 class LockScreenFragment : Fragment(), BiometricAuthListener {
 
     companion object {
         fun newInstance() = LockScreenFragment()
+    }
+
+    private val viewModel: VPassViewModel by viewModels() {
+        VPassViewModelFactory((requireActivity().application as VPassLiveRoomApplication).repository)
     }
 
     private lateinit var pinDisplay: TextView
@@ -116,7 +128,7 @@ class LockScreenFragment : Fragment(), BiometricAuthListener {
     fun numPress(num: String) {
         val display = pinDisplay.text.toString()
         if (num == "delete") {
-            if (display != null && display.length > 0) {
+            if (display.length > 0) {
                 pinDisplay.text = display.substring(0, display.length - 1)
                 typedPass = typedPass.substring(0, display.length - 1)
             }
@@ -233,6 +245,8 @@ class LockScreenFragment : Fragment(), BiometricAuthListener {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         if ("android.intent.custom.scan" == requireActivity().intent.action) {
             requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scan_now
+        } else if ("android.intent.custom.show_latest" == requireActivity().intent.action) {
+            showLatest()
         } else if (sharedPreferences.getBoolean("border_mode", false)) {
             requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.menu_scan_now
         }
@@ -242,5 +256,54 @@ class LockScreenFragment : Fragment(), BiometricAuthListener {
         typedPass = ""
         pinDisplay.text = ""
         pinErrorText.text = errorMessage
+    }
+
+    private fun showLatest() {
+        Log.i("CLICK", "Displaying Data for latest")
+        Log.i("CLICK", "Displaying Data for " + viewModel.Vpasses)
+
+        lifecycleScope.launch {
+            var dataObject: VPassData?
+            withContext(Dispatchers.IO) {
+                dataObject = try {
+                    viewModel.getLatest()
+                } catch (exception: Exception) {
+                    null
+                }
+            }
+            if (dataObject != null) {
+                val cerealObject = getSerialisedVPass(dataObject!!)
+                model.barcodeToDisplay.value = cerealObject
+                model.getShowingBarcodeInScannedBarcodeFragment().value = true
+                requireActivity().supportFragmentManager.beginTransaction()
+                        .replace(R.id.container,
+                                ScannedBarcodeFragment(),
+                                "show_scan_result"
+                        )
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .addToBackStack("show_scan_result")
+                        .commit()
+            } else {
+                makeToast(getString(R.string.no_pass_shortcut))
+            }
+        }
+    }
+
+    fun makeToast(string: String){
+        Toast.makeText(context, string, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun getSerialisedVPass(vpass: VPassData) : SerializableVPass {
+        Log.i("VPASS Received", vpass.name)
+        val dateAdministered = vpass.date
+        val vaccineType = vpass.vacId
+        val dosageNumber = vpass.dosageNum
+        val passportNumber = vpass.passportNum
+        val passportExpiry = vpass.passportExpDate
+        val dateOfBirth = vpass.dob
+        val country = vpass.country
+        val name = vpass.name
+        val doctorName = vpass.drAdministered
+        return SerializableVPass(dateAdministered, vaccineType, doctorName, dosageNumber, name, passportNumber, passportExpiry, dateOfBirth, country)
     }
 }
