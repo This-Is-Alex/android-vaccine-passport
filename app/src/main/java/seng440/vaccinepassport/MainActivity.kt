@@ -2,6 +2,7 @@ package seng440.vaccinepassport
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.ActivityInfo
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
@@ -88,6 +89,11 @@ class MainActivity : AppCompatActivity() {
         model.showBottomNavBar.observe(this, Observer<Boolean> { show ->
             findViewById<BottomNavigationView>(R.id.bottom_navigation).visibility =
                 if (show) View.VISIBLE else View.GONE
+            if (show) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER)
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            }
         })
 
         model.getActionBarTitle().value = getString(R.string.app_name)
